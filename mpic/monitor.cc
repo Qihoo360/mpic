@@ -5,17 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#include <fstream>
-
-//#include <boost/bind.hpp>
-//#include <boost/asio.hpp>
-//#include <boost/thread.hpp>
-//#include <boost/shared_ptr.hpp>
-//#include <boost/make_shared.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
 #include <libdaemon/daemon.h>
-
-//#include <glog/logging.h>
 
 #include "./monitor.h"
 
@@ -39,34 +29,18 @@ static void sigchld(int) {}
 static pid_t SpawnChildWorker(sigset_t* sigset) {
     pid_t pid = fork();
     if (pid < 0) {
-        //PLOG(FATAL) << "fork() failed!!";
+        abort();
     } else if (pid == 0) {
         // child
-        //LOG(INFO) << "in child process, child (" << getpid() << ") started";
         sigprocmask(SIG_UNBLOCK, sigset, NULL);
-        //if (!Option.foreground()) {
-        //    std::string title_prefix = proc::Option::GetExeName() + "(" + option.name() + "): worker process";
-        //    proc::Title::Set(title_prefix);
-        //}
-        
-        //google::ShutdownGoogleLogging();
-        //google::InitGoogleLogging(proc::Option::GetExeName().data());
         exit(Monitor::instance().worker_main_routine()());
     } else if (pid > 0) {
         // parent
-        //LOG(INFO) << "in monitor process, child(" << pid << ") started";
     }
     return pid;
 }
 
 static int RunMonitor() {
-
-    //LOG(INFO) << "Entering " << __func__ << " ...";
-
-    //std::string origin_title = Monitor::instance().option()->original_cmdline();
-    //std::string title_prefix = proc::Option::GetExeName() + "(" + option.name() + "): monitor process";
-    //proc::Title::Set(title_prefix + origin_title);
-
     sigset_t sigset;
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGCHLD);
@@ -87,16 +61,13 @@ static int RunMonitor() {
             if (errno == EINTR || errno == EAGAIN) {
                 continue;
             }
-            //PLOG(ERROR) << "sigwaitinfo: ";
             return 1;
         }
 
         if (sig.si_signo == SIGCHLD) {
-            //LOG(INFO) << "SIGCHLD signal recved";
             int status = 0;
             pid_t pid = ::waitpid(-1, &status, WNOHANG);
             if (pid < 0) {
-                //PLOG(ERROR) << "waitpid()";
                 continue;
             } else if (pid == 0) {
                 continue;

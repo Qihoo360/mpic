@@ -4,8 +4,6 @@ CC=gcc
 CXX=g++
 AR=ar
 ARFLAGS=cru
-CURRENT_DIR=$(shell echo `pwd`)
-SOURCE_DIR=$(CURRENT_DIR)
 
 LIBDAEMON_PATH := ../3rdparty/libdaemon
 
@@ -46,12 +44,6 @@ $(TARGET_SO) : $(OBJS)
 	ln -s $(@).$(FULL) $(@).$(MAJOR)
 	ln -s $(@).$(MAJOR) $(@)
 	
-check : $(TARGET_A) $(TARGET_SO)	
-	$(MAKE) install
-	$(MAKE) check -C test
-	$(MAKE) check -C quick_test
-	$(MAKE) check -C quick_gtest
-
 %.cc.o : %.cc 
 	$(CXX) $(CPPFLAGS) $< -o $@
 

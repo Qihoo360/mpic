@@ -21,6 +21,7 @@ int RunWorker() {
         sleep(1);
     }
 
+    fclose(f);
     return 0;
 }  
 

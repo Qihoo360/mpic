@@ -24,7 +24,7 @@ SRCS := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 
-TARGET=daemon_test
+TARGET=monitor_worker_test
 
 all : $(TARGET) 
 
