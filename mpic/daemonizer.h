@@ -2,11 +2,11 @@
 
 namespace mpic {
 
-class Daemonize
+class Daemonizer
 {
 public:
-    Daemonize();
-    ~Daemonize();
+    Daemonizer();
+    ~Daemonizer();
     void Init();
 };
 

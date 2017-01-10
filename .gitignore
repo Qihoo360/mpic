@@ -14,3 +14,4 @@
 *.a
 
 libmpic.so.*
+examples/daemon/daemon_test
