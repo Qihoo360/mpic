@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.d
 
 # Compiled Dynamic libraries
 *.so
@@ -11,3 +12,5 @@
 *.lai
 *.la
 *.a
+
+libmpic.so.*

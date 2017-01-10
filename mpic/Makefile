@@ -7,25 +7,26 @@ ARFLAGS=cru
 CURRENT_DIR=$(shell echo `pwd`)
 SOURCE_DIR=$(CURRENT_DIR)
 
+LIBDAEMON_PATH := ../3rdparty/libdaemon
 
 DEBUG := -D_DEBUG
 
 CFLAGS=$(TOP_CFLAGS) -g -c -fPIC $(DEBUG) \
 	   -Wall -Wno-unused-parameter -Wno-unused-function -Wunused-variable -Wunused-value \
 	   -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings -Wsign-compare \
-	   -Winvalid-pch -fms-extensions -Wfloat-equal -Wextra -std=c++11 \
-	   -I .. -I ../include -MMD
-CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords
+	   -Winvalid-pch -fms-extensions -Wfloat-equal -Wextra \
+	   -I .. -I $(LIBDAEMON_PATH) -D'LOCALSTATEDIR="./"' -MMD
+CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11
 
 RTFLAGS := \
     -Wl,-rpath=.
 
 LDFLAGS= $(RTFLAGS) -lpthread \
-		 -levent -lglog
+		 -lglog
 
 
-SRCS := $(wildcard *.cc) $(wildcard httpc/*.cc) $(wildcard http/*.cc) $(wildcard udp/*.cc)
-OBJS := $(patsubst %.cc, %.o, $(SRCS)) $(CCOBJS)
+SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c)
+OBJS := $(patsubst %, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 
 LIBNAME=mpic
@@ -52,8 +53,11 @@ check : $(TARGET_A) $(TARGET_SO)
 	$(MAKE) check -C quick_test
 	$(MAKE) check -C quick_gtest
 
-%.o : %.cc 
+%.cc.o : %.cc 
 	$(CXX) $(CPPFLAGS) $< -o $@
+
+%.c.o : %.c 
+	$(CC) $(CFLAGS) $< -o $@
 
 -include $(DEPS)
 
