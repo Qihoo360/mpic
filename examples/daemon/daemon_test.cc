@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[])
 {
+    printf("pid=%d starting ...\n", getpid());
     pid_t start_pid = getpid();
     bool is_daemon = false;
     if (argc == 2 && strcmp(argv[1], "-d") == 0) {

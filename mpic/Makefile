@@ -22,7 +22,6 @@ RTFLAGS := \
     -Wl,-rpath=.
 
 LDFLAGS= $(RTFLAGS) -lpthread \
-		 -lglog
 
 
 SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c)
