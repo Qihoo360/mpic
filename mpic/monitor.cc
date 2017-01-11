@@ -117,11 +117,11 @@ static int RunAsDaemon() {
         daemon_log(LOG_ERR, "initialize daemon failed");
         return 1;
     }
-    
+
     pid = daemon_fork();
     if (pid < 0) {
         daemon_log(LOG_ERR, "daemonize failed: %s",
-                strerror(errno));
+                   strerror(errno));
         daemon_retval_done();
         return 1;
     } else if (pid > 0) {
@@ -129,7 +129,7 @@ static int RunAsDaemon() {
         int retval = 0;
         if ((retval = daemon_retval_wait(10)) < 0) {
             daemon_log(LOG_ERR, "can't retrive daemon retval: %s",
-                    strerror(errno));
+                       strerror(errno));
             return 1;
         }
         switch (retval) {
@@ -147,13 +147,13 @@ static int RunAsDaemon() {
         int retval = 0;
         if (daemon_close_all(-1) != 0) {
             daemon_log(LOG_ERR, "can't close all fds: %s",
-                    strerror(errno));
+                       strerror(errno));
             retval = 1;
             goto finish;
         }
         if (daemon_pid_file_create() != 0) {
             daemon_log(LOG_ERR, "can't write pid file %s: %s",
-                    PidFileName(), strerror(errno));
+                       PidFileName(), strerror(errno));
             retval = 2;
             goto finish;
         }
@@ -193,12 +193,10 @@ static int ReloadDaemon() {
 
 }
 
-Monitor::Monitor() 
-{
+Monitor::Monitor() {
 }
 
-Monitor::~Monitor()
-{
+Monitor::~Monitor() {
 }
 
 int Monitor::Run(WorkerMainRoutine worker_main) {

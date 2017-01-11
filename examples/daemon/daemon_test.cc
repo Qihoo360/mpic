@@ -6,8 +6,7 @@
 
 #include "mpic/daemonizer.h"
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     printf("pid=%d starting ...\n", getpid());
     pid_t start_pid = getpid();
     bool is_daemon = false;
@@ -32,4 +31,4 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-    
+

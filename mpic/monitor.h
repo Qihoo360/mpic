@@ -4,32 +4,36 @@
 
 namespace mpic {
 
-    class Monitor {
-    public:
-        /** return 0 if OK, others failed */
-        typedef std::function< int() > WorkerMainRoutine;
+class Monitor {
+public:
+    /** return 0 if OK, others failed */
+    typedef std::function< int() > WorkerMainRoutine;
 
-        ~Monitor();
+    ~Monitor();
 
-        /**
-         * @param worker_main - the child worker process main routine
-         * @return 0 if OK, others failed
-         */
-        int Run(WorkerMainRoutine worker_main);
+    /**
+     * @param worker_main - the child worker process main routine
+     * @return 0 if OK, others failed
+     */
+    int Run(WorkerMainRoutine worker_main);
 
-    public:
-        WorkerMainRoutine worker_main_routine() { return worker_main_routine_;}
+public:
+    WorkerMainRoutine worker_main_routine() {
+        return worker_main_routine_;
+    }
 
-        static Monitor& instance() { return instance_; }
+    static Monitor& instance() {
+        return instance_;
+    }
 
-    private:
-        Monitor();
-        Monitor(const Monitor& rhs) {}
+private:
+    Monitor();
+    Monitor(const Monitor& rhs) {}
 
-    private:
-        WorkerMainRoutine worker_main_routine_;
-        static Monitor instance_;
-    };
+private:
+    WorkerMainRoutine worker_main_routine_;
+    static Monitor instance_;
+};
 }
 
 

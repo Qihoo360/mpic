@@ -1,4 +1,6 @@
 
+include ../build.mk/astyle.mk
+
 EXAMPLES = daemon monitor-worker
 
 all : prepare
@@ -6,6 +8,9 @@ all : prepare
 
 clean:
 	for t in $(EXAMPLES); do $(MAKE) clean -C $$t; done
+
+fmt:
+	for t in $(EXAMPLES); do cd $$t && $(ASTYLE) *.cc && rm -f *.orig && cd -; done
 
 prepare :
 	$(MAKE) -C ../mpic/

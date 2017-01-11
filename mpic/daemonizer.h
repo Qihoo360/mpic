@@ -2,8 +2,7 @@
 
 namespace mpic {
 
-class Daemonizer
-{
+class Daemonizer {
 public:
     Daemonizer();
     ~Daemonizer();

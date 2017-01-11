@@ -27,5 +27,8 @@ clean:
 	$(MAKE) clean -C apps
 	$(MAKE) clean -C 3rdparty
 
+fmt:
+	$(MAKE) fmt -C mpic
+	$(MAKE) fmt -C examples
 
-.PHONY: all test check clean apps 3rdparty pkg
+.PHONY: all test check clean apps 3rdparty pkg fmt

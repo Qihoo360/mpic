@@ -1,4 +1,5 @@
 include ../rpm/build.mk
+include ../build.mk/astyle.mk
 
 CC=gcc
 CXX=g++
@@ -52,12 +53,9 @@ $(TARGET_SO) : $(OBJS)
 
 -include $(DEPS)
 
-t:
-	@echo "LIBNAME:" $(LIBNAME)
-	@echo "SRCS:" $(SRCS)
-	@echo "OBJS:" $(OBJS)
-	@echo "CFLAGS:" $(CFLAGS)
-	@echo "CPPFLAGS:" $(CPPFLAGS)
+fmt:
+	$(ASTYLE) *.cc *.h
+	rm -rf *.orig
 
 install: $(TARGET_A) $(TARGET_SO) 
 
