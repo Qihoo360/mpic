@@ -29,5 +29,6 @@ int RunWorker() {
 
 int main(int argc, char* argv[]) {
     mpic::Monitor& pm = mpic::Monitor::instance();
+    pm.Init(argc, argv);
     return pm.Run(&RunWorker);
 }

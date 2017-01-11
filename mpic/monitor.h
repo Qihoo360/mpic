@@ -9,6 +9,8 @@ public:
     /** return 0 if OK, others failed */
     typedef std::function< int() > WorkerMainRoutine;
 
+    bool Init(int argc, char** argv);
+
     ~Monitor();
 
     /**

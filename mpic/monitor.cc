@@ -8,6 +8,7 @@
 #include <libdaemon/daemon.h>
 
 #include "./monitor.h"
+#include "./title.h"
 
 namespace mpic {
 
@@ -19,9 +20,31 @@ static const char* PidFileName() {
     return "/tmp/mpic.pid";
 }
 
+static const std::string& GetExeName() {
+    static std::string __s_name;
+    if (__s_name.empty()) {
+        char buf[1024] = {0};
+        int count = readlink("/proc/self/exe", buf, 1024);
+        if (count < 0 || count >= 1024) {
+            printf("Failed to %s\n", __func__);
+            return __s_name;
+        }
+        buf[ count ] = '\0';
+
+        const char* name = strrchr(buf, '/');
+        if (name) {
+            __s_name = name + 1;
+        } else {
+            __s_name = buf;
+        }
+    }
+
+    return __s_name;
+}
+
 namespace detail {
 
-static const char* g_exe_name = "mpic";
+static const char* g_exe_name = GetExeName().c_str();
 
 static void sigchld(int) {}
 
@@ -32,6 +55,8 @@ static pid_t SpawnChildWorker(sigset_t* sigset) {
         abort();
     } else if (pid == 0) {
         // child
+        std::string title = std::string(g_exe_name) + "(mpic): worker process";
+        Title::Set(title);
         sigprocmask(SIG_UNBLOCK, sigset, NULL);
         exit(Monitor::instance().worker_main_routine()());
     } else if (pid > 0) {
@@ -41,6 +66,9 @@ static pid_t SpawnChildWorker(sigset_t* sigset) {
 }
 
 static int RunMonitor() {
+    std::string title = std::string(g_exe_name) + "(mpic): monitor process";
+    Title::Set(title);
+
     sigset_t sigset;
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGCHLD);
@@ -191,6 +219,7 @@ static int ReloadDaemon() {
     }
 }
 
+
 }
 
 Monitor::Monitor() {
@@ -200,10 +229,13 @@ Monitor::~Monitor() {
 }
 
 int Monitor::Run(WorkerMainRoutine worker_main) {
-
     worker_main_routine_ = worker_main;
     return detail::RunAsDaemon();
 }
 
+bool Monitor::Init(int argc, char** argv) {
+    Title::Init(argc, argv);
+    return true;
+}
 
 }
