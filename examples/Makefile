@@ -1,7 +1,7 @@
 
 include ../build.mk/astyle.mk
 
-EXAMPLES = daemon monitor-worker
+EXAMPLES = daemon monitor-worker master-workers
 
 all : prepare
 	for t in $(EXAMPLES); do $(MAKE) -C $$t; done

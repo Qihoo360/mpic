@@ -3,7 +3,10 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include <unistd.h>
+#include <assert.h>
 #include <string.h>
+
+#include <map>
 
 #include <libdaemon/daemon.h>
 
@@ -46,8 +49,24 @@ namespace detail {
 
 static const char* g_exe_name = GetExeName().c_str();
 
+struct Process {
+    pid_t pid;
+};
+typedef std::map<pid_t, Process> ProcessMap;
+static ProcessMap s_processes; // Current running worker processes
+static ProcessMap s_exiting_processes; // worker processes which are exiting
 static void sigchld(int) {}
 
+static void KillAllChildren() {
+    s_exiting_processes = s_processes;
+    ProcessMap::iterator it(s_processes.begin());
+    ProcessMap::iterator ite(s_processes.end());
+    for (; it != ite; ++it) {
+        //LOG(INFO) << "killing child(" << it->first << ")";
+        kill(it->first, SIGTERM);
+    }
+    s_processes.clear();
+}
 
 static pid_t SpawnChildWorker(sigset_t* sigset) {
     pid_t pid = fork();
@@ -58,15 +77,29 @@ static pid_t SpawnChildWorker(sigset_t* sigset) {
         std::string title = std::string(g_exe_name) + "(mpic): worker process";
         Title::Set(title);
         sigprocmask(SIG_UNBLOCK, sigset, NULL);
+        s_processes.clear(); // Now we don't need to use it in children worker process
         exit(Master::instance().worker_main_routine()());
     } else if (pid > 0) {
         // parent
     }
+
+    // parent
+    assert(pid > 0);
+
+    Process p;
+    p.pid = pid;
+    s_processes[pid] = p;
     return pid;
 }
 
+static void SpawnChildWorkers(sigset_t* sigset) {
+    for (int i = 0; i < Master::instance().worker_processes(); ++i) {
+        SpawnChildWorker(sigset);
+    }
+}
+
 static int RunMaster() {
-    std::string title = std::string(g_exe_name) + "(mpic): monitor process";
+    std::string title = std::string(g_exe_name) + "(mpic): master process";
     Title::Set(title);
 
     sigset_t sigset;
@@ -75,11 +108,11 @@ static int RunMaster() {
     sigaddset(&sigset, SIGTERM);
     sigaddset(&sigset, SIGHUP);
     sigaddset(&sigset, SIGINT);
-    sigaddset(&sigset, SIGQUIT);
     sigprocmask(SIG_BLOCK, &sigset, NULL);
     signal(SIGCHLD, sigchld);
 
-    pid_t child = SpawnChildWorker(&sigset);
+    SpawnChildWorkers(&sigset);
+
     bool exiting = false;
 
     while (true) {
@@ -93,39 +126,56 @@ static int RunMaster() {
         }
 
         if (sig.si_signo == SIGCHLD) {
-            int status = 0;
-            pid_t pid = ::waitpid(-1, &status, WNOHANG);
-            if (pid < 0) {
-                continue;
-            } else if (pid == 0) {
-                continue;
-            }
+            //LOG(INFO) << "child signal recved";
+            for (;;) {
+                int status = 0;
+                pid_t pid = ::waitpid(-1, &status, WNOHANG);
+                if (pid < 0) {
+                    //PLOG(ERROR) << "waitpid()";
+                    break;
+                } else if (pid == 0) {
+                    //PLOG(ERROR) << "waitpid() return 0";
+                    break;
+                }
 
-            if (WIFEXITED(status)) {
-                //LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
-            } else if (WIFSIGNALED(status)) {
-                //LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
-            } else if (WCOREDUMP(status)) {
-                //LOG(INFO) << "child(" << pid << ") core dumped";
-            } else {
-                //LOG(INFO) << "child(" << pid << ") XXX status=" << status;
-                continue;
+                if (WIFEXITED(status)) {
+                    //LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
+                } else if (WIFSIGNALED(status)) {
+                    //LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
+                } else if (WCOREDUMP(status)) {
+                    //LOG(INFO) << "child(" << pid << ") core dumped";
+                } else {
+                    //LOG(INFO) << "child(" << pid << ") XXX";
+                    continue;
+                }
+
+                if (s_exiting_processes.find(pid) != s_exiting_processes.end()) {
+                    s_exiting_processes.erase(pid);
+                    //LOG(INFO) << "erased pid(" << pid << ") from s_exiting_processes. now s_exiting_processes num=" << s_exiting_processes.size();
+                }
+
+                if (s_processes.find(pid) != s_processes.end()) {
+                    s_processes.erase(pid);
+                    SpawnChildWorker(&sigset);
+                }
             }
             if (exiting) {
                 break;
             }
-            if (pid == child) {
-                //sleep(1); // Why need? comments it.
-                child = SpawnChildWorker(&sigset);
-            }
         } else if (sig.si_signo == SIGHUP) {
-            //LOG(INFO) << "SIGHUP reload signal recved";
-            kill(child, SIGTERM);
-            // then this Master will recv a SIGCHLD signal and restart the worker again
-        } else {
-            //LOG(INFO) << "term signal recved";
-            kill(child, SIGTERM);
+            //LOG(INFO) << "SIGHUP reload signal recved. signo=" << sig.si_signo;
+            if (!s_exiting_processes.empty()) {
+                //LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
+                continue;
+            }
+            KillAllChildren();
+            SpawnChildWorkers(&sigset);
+        } else if (sig.si_signo == SIGTERM) {
+            //LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
+            KillAllChildren();
             exiting = true;
+        } else {
+            //LOG(ERROR) << "signal recved. signo=" << sig.si_signo << " , nO process handler";
         }
     }
     return 0;
@@ -222,7 +272,7 @@ static int ReloadDaemon() {
 
 }
 
-Master::Master() {
+Master::Master() : worker_processes_(1) {
 }
 
 Master::~Master() {
@@ -235,6 +285,9 @@ int Master::Run(WorkerMainRoutine worker_main) {
 
 bool Master::Init(int argc, char** argv) {
     Title::Init(argc, argv);
+    if (argc == 2) {
+        worker_processes_ = atoi(argv[1]);
+    }
     return true;
 }
 

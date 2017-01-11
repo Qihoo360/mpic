@@ -24,6 +24,10 @@ public:
         return worker_main_routine_;
     }
 
+    int worker_processes() const {
+        return worker_processes_;
+    }
+
     static Master& instance() {
         return instance_;
     }
@@ -34,6 +38,7 @@ private:
 
 private:
     WorkerMainRoutine worker_main_routine_;
+    int worker_processes_;
     static Master instance_;
 };
 }
