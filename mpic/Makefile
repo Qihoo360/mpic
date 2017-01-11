@@ -60,5 +60,5 @@ fmt:
 install: $(TARGET_A) $(TARGET_SO) 
 
 clean:
-	rm -rf $(OBJS) $(DEPS) $(TARGET_SO) $(TARGET_A)
+	rm -rf $(OBJS) $(DEPS) $(TARGET_SO)* $(TARGET_A)
 
