@@ -1,17 +1,7 @@
-PLATFORM := $(shell uname)
-PLATFORM_VERSION := $(shell uname -r| awk -F 'el' '{printf("el%d", substr($$2,1,1))}')
+include ../build.mk/astyle.mk
+
 
 CXX := g++
-#ifeq ($(PLATFORM_VERSION),el6)
-#GCC472_PATH=/home/s/gcc-4.9.2
-#CXX := env LD_LIBRARY_PATH=$(GCC472_PATH)/lib $(GCC472_PATH)/bin/g++
-#else
-#CXX := g++
-#endif
-
-CURRENT_DIR=$(shell echo `pwd`)
-PARENT_DIRNAME=$(shell basename $(shell dirname $(CURRENT_DIR)))
-SOURCE_DIR=$(CURRENT_DIR)
 
 GTESTDIR = ../3rdparty/gtest
 
@@ -22,16 +12,16 @@ CPPFLAGS= -g -c -fPIC \
 		  -MMD -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11\
 		  -I ./$(GTESTDIR) \
 		  -I .. \
-		  -I $(SOURCE_DIR)/../3rdparty \
+		  -I ../3rdparty \
 
 RTFLAGS := \
     -Wl,-rpath=. \
-    -Wl,-rpath=$(CURRENT_DIR)/../mpic
+    -Wl,-rpath=../mpic
 
 LDFLAGS= $(RTFLAGS) \
-	 -L $(CURRENT_DIR)/../mpic \
+	 -L../mpic \
 	 -lpthread \
-	 -lmpic -lglog -lboost_program_options-mt -lpthread
+	 -lmpic -lglog -lpthread
 
 DIRNAME=$(shell basename `pwd`)
 
@@ -39,7 +29,7 @@ SRCS := $(wildcard *.cc) $(GTESTDIR)/src/gtest-all.cc $(GTESTDIR)/src/gtest_main
 OBJS := $(patsubst %.cc, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 
-TARGET=$(PARENT_DIRNAME)
+TARGET=mpic-test
 
 all : $(TARGET) 
 
@@ -57,3 +47,6 @@ $(TARGET) : $(OBJS)
 clean:
 	rm -rf *.o *.d core.* $(OBJS) $(DEPS) $(TARGET) *.tmp decoded.txt log
 
+fmt:
+	$(ASTYLE) *.cc *.h
+	rm -rf *.orig

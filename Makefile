@@ -1,34 +1,25 @@
 
+SUBDIRS = mpic test examples 
+
 all : 
-	$(MAKE) -C mpic
-#	$(MAKE) -C 3rdparty
+	for t in $(SUBDIRS); do $(MAKE) -C $$t; done
+
+#pkg :
+#	$(MAKE) -C rpm
+#
+#apps :
 #	$(MAKE) -C apps
-
-pkg :
-	$(MAKE) -C rpm
-
-test : all
-	$(MAKE) -C test
-	$(MAKE) -C examples
-
-apps :
-	$(MAKE) -C apps
-
-3rdparty :
-	$(MAKE) -C 3rdparty
-
-check : all
-	$(MAKE) check -C test
+#
+#3rdparty :
+#	$(MAKE) -C 3rdparty
+#
+#check : all
+#	$(MAKE) check -C test
 
 clean:
-	$(MAKE) clean -C mpic
-	$(MAKE) clean -C test
-	$(MAKE) clean -C examples
-	$(MAKE) clean -C apps
-	$(MAKE) clean -C 3rdparty
+	for t in $(SUBDIRS); do $(MAKE) clean -C $$t; done
 
 fmt:
-	$(MAKE) fmt -C mpic
-	$(MAKE) fmt -C examples
+	for t in $(SUBDIRS); do $(MAKE) fmt -C $$t; done
 
 .PHONY: all test check clean apps 3rdparty pkg fmt

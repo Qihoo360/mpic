@@ -1,7 +1,5 @@
 #include "test_common.h"
 
-#include "mpic/exp.h"
-
 #ifdef WIN32
 #include <WinSock2.h>
 
