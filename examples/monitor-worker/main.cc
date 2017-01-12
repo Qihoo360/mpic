@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "mpic/monitor.h"
+#include "monitor.h"
 
 #include <stdio.h>
 
