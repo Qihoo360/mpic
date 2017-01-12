@@ -1,10 +1,16 @@
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <assert.h>
 
 #include <sstream>
+#include <iostream>
+
 #include <gflags/gflags.h>
-#include <simcc/file_util.h>
 
 #include "option.h"
+#include "file_util.h"
 
 DEFINE_string(config_file, "/tmp/mpic.conf", "The config file for the submodule");
 DEFINE_string(pid_file, "/tmp/mpic.pid", "The pid file of the process");
@@ -63,24 +69,24 @@ namespace mpic {
         this->name_ = FLAGS_name;
         this->log_dir_ = FLAGS_log_dir;
         if (this->name_.empty()) {
-            this->name_ = simcc::FileUtil::GetFileNameWithoutExt(cfg_file_);
+            this->name_ = FileUtil::GetFileNameWithoutExt(cfg_file_);
         }
 
         // this->newbin_
 
-        if (!simcc::FileUtil::IsDir(log_dir_)) {
+        if (!FileUtil::IsDir(log_dir_)) {
             umask(002);
             mkdir(log_dir_.c_str(), 0775);
             umask(022);
             
-            if (!simcc::FileUtil::IsDir(log_dir_)) {
+            if (!FileUtil::IsDir(log_dir_)) {
                 std::cerr << "Can't open log-dir [" << log_dir_ << "]\n";
                 return false;
             }
         }
 
-        if (!simcc::FileUtil::IsFileExist(cfg_file_) ||
-            !simcc::FileUtil::IsReadable(cfg_file_)) {
+        if (!FileUtil::IsFileExist(cfg_file_) ||
+            !FileUtil::IsReadable(cfg_file_)) {
             std::cerr << "Can't find or read config file " << cfg_file_ << std::endl;
             return false;
         }
