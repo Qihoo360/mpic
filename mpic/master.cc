@@ -17,7 +17,6 @@ static const char* PidFileName() {
     return Master::instance().option()->pid_file().c_str();
 }
 
-
 static void sigchld(int) {}
 
 void Master::KillAllChildren() {
@@ -31,26 +30,30 @@ void Master::KillAllChildren() {
     running_processes_.clear();
 }
 
-pid_t Master::SpawnChildWorker(const mpic::Option& op, sigset_t* sigset) {
+pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
     google::FlushLogFiles(0);
     pid_t pid = fork();
     if (pid < 0) {
         PLOG(FATAL) << "fork() failed!!";
     } else if (pid == 0) {
         // child
-        LOG(INFO) << "in child process, child (" << getpid() << ") started";
-        sigprocmask(SIG_UNBLOCK, sigset, NULL);
-        if (!op.foreground()) {
-            std::string title_prefix = mpic::Option::GetExeName() + "(" + op.name() + "): worker process";
-            mpic::Title::Set(title_prefix);
-        }
+        google::ShutdownGoogleLogging();
+        google::InitGoogleLogging(Option::GetExeName().data());
 
         running_processes_.clear(); // Now we don't need to use it in children worker process
         exiting_processes_.clear();
 
+        LOG(INFO) << "in child process, child (" << getpid() << ") started";
+        sigprocmask(SIG_UNBLOCK, sigset, NULL);
+        if (!op.foreground()) {
+            std::string title_prefix = Option::GetExeName() + "(" + op.name() + "): worker process";
+            Title::Set(title_prefix);
+        }
+
+        int ret = Master::instance().worker_main_routine()();
+        LOG(WARNING) << "child worker process (" << getpid() << ") exited with code " << ret;
         google::ShutdownGoogleLogging();
-        google::InitGoogleLogging(mpic::Option::GetExeName().data());
-        exit(Master::instance().worker_main_routine()());
+        exit(ret);
     }
 
     // parent
@@ -63,18 +66,18 @@ pid_t Master::SpawnChildWorker(const mpic::Option& op, sigset_t* sigset) {
     return pid;
 }
 
-void Master::SpawnChildWorkers(const mpic::Option& op, sigset_t* sigset) {
+void Master::SpawnChildWorkers(const Option& op, sigset_t* sigset) {
     for (int i = 0; i < op.worker_processes(); ++i) {
         SpawnChildWorker(op, sigset);
     }
 }
 
-int Master::RunMaster(const mpic::Option& op) {
+int Master::RunMaster(const Option& op) {
     LOG(INFO) << "Entering " << __func__ << " ...";
 
     std::string origin_title = op.original_cmdline();
-    std::string title_prefix = mpic::Option::GetExeName() + "(" + op.name() + "): master process";
-    mpic::Title::Set(title_prefix + origin_title);
+    std::string title_prefix = Option::GetExeName() + "(" + op.name() + "): master process";
+    Title::Set(title_prefix + origin_title);
 
     sigset_t sigset;
     sigemptyset(&sigset);
@@ -158,12 +161,12 @@ int Master::RunMaster(const mpic::Option& op) {
     return 0;
 }
 
-int Master::RunMainRoutine(const mpic::Option& op) {
+int Master::RunMainRoutine(const Option& op) {
     FLAGS_stderrthreshold = 0;
     FLAGS_log_dir = op.log_dir();
 
     if (op.foreground()) {
-        google::InitGoogleLogging(mpic::Option::GetExeName().data());
+        google::InitGoogleLogging(Option::GetExeName().data());
         return Master::instance().worker_main_routine()();
     } else {
         google::InitGoogleLogging("master");
@@ -171,11 +174,11 @@ int Master::RunMainRoutine(const mpic::Option& op) {
     }
 }
 
-int Master::RunForeground(const mpic::Option& op) {
+int Master::RunForeground(const Option& op) {
     return RunMainRoutine(op);
 }
 
-int Master::RunAsDaemon(const mpic::Option& op) {
+int Master::RunAsDaemon(const Option& op) {
     daemon_pid_file_proc = PidFileName;
     daemon_log_ident = op.name().c_str();
 
@@ -242,7 +245,7 @@ int Master::RunAsDaemon(const mpic::Option& op) {
     }
 }
 
-int Master::KillDaemon(const mpic::Option& op) {
+int Master::KillDaemon(const Option& op) {
     daemon_pid_file_proc = PidFileName;
     pid_t pid = daemon_pid_file_is_running();
     if (pid > 0) {
@@ -266,7 +269,7 @@ int Master::KillDaemon(const mpic::Option& op) {
     }
 }
 
-int Master::ReloadDaemon(const mpic::Option& op) {
+int Master::ReloadDaemon(const Option& op) {
     daemon_pid_file_proc = PidFileName;
 
     pid_t pid = daemon_pid_file_is_running();
@@ -286,7 +289,7 @@ int Master::ReloadDaemon(const mpic::Option& op) {
     }
 }
 
-int Master::CheckStatus(const mpic::Option& op) {
+int Master::CheckStatus(const Option& op) {
     daemon_pid_file_proc = PidFileName;
     pid_t pid = daemon_pid_file_is_running();
     if (pid > 0) {
@@ -332,7 +335,7 @@ int Master::Run(WorkerMainRoutine worker_main) {
 
 bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {
     option_ = op;
-    mpic::Title::Init(argc, argv);
+    Title::Init(argc, argv);
     if (!option_->Init(argc, argv)) {
         return false;
     }

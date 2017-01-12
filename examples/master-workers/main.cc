@@ -41,7 +41,7 @@ int RunWorker(const HttpOption* option) {
 }
 
 int main(int argc, char* argv[]) {
-    gflags::ParseCommandLineFlags(&argc, &argv, true);
+    gflags::ParseCommandLineFlags(&argc, &argv, false);
     std::shared_ptr<mpic::Option> op(new HttpOption);
     mpic::Master& pm = mpic::Master::instance();
     if (pm.Init(argc, argv, op)) {
