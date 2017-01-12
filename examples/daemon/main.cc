@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "mpic/daemonizer.h"
+#include "daemonizer.h"
 
 int main(int argc, char* argv[]) {
     printf("pid=%d starting ...\n", getpid());
