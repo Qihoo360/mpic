@@ -18,7 +18,7 @@ RTFLAGS := \
 
 LDFLAGS= $(RTFLAGS) \
 		 -L$(MPIC_DIR)/mpic \
-		 -lmpic 
+		 -lmpic -lglog -lgflags
 
 SRCS := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRCS))

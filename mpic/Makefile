@@ -6,6 +6,8 @@ CXX=g++
 AR=ar
 ARFLAGS=cru
 
+PWD := $(shell pwd)
+SIMCC := $(PWD)/../../simcc
 LIBDAEMON_PATH := ../3rdparty/libdaemon
 
 DEBUG := -D_DEBUG
@@ -14,13 +16,14 @@ CFLAGS=$(TOP_CFLAGS) -g -c -fPIC $(DEBUG) \
 	   -Wall -Wno-unused-parameter -Wno-unused-function -Wunused-variable -Wunused-value \
 	   -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings -Wsign-compare \
 	   -Winvalid-pch -fms-extensions -Wfloat-equal -Wextra \
-	   -I .. -I $(LIBDAEMON_PATH) -D'LOCALSTATEDIR="./"' -MMD
+	   -I . -I .. -I $(SIMCC) -I $(LIBDAEMON_PATH) -D'LOCALSTATEDIR="./"' -MMD
 CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11
 
 RTFLAGS := \
-    -Wl,-rpath=.
+    -Wl,-rpath=. \
+    -Wl,-rpath=$(SIMCC)/simcc/
 
-LDFLAGS= $(RTFLAGS) -lpthread \
+LDFLAGS= $(RTFLAGS) -L $(SIMCC)/simcc/ -lsimcc -lpthread -lglog \
 
 
 SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c)

@@ -1,14 +1,10 @@
 #include <sys/wait.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <signal.h>
-#include <unistd.h>
 #include <assert.h>
 #include <string.h>
 
-#include <map>
-
 #include <libdaemon/daemon.h>
+#include <glog/logging.h>
 
 #include "./master.h"
 #include "./title.h"
@@ -17,90 +13,68 @@ namespace mpic {
 
 Master Master::instance_;
 
-using namespace std;
-
 static const char* PidFileName() {
-    return "/tmp/mpic.pid";
+    return Master::instance().option()->pid_file().c_str();
 }
 
-static const std::string& GetExeName() {
-    static std::string __s_name;
-    if (__s_name.empty()) {
-        char buf[1024] = {0};
-        int count = readlink("/proc/self/exe", buf, 1024);
-        if (count < 0 || count >= 1024) {
-            printf("Failed to %s\n", __func__);
-            return __s_name;
-        }
-        buf[ count ] = '\0';
 
-        const char* name = strrchr(buf, '/');
-        if (name) {
-            __s_name = name + 1;
-        } else {
-            __s_name = buf;
-        }
-    }
-
-    return __s_name;
-}
-
-namespace detail {
-
-static const char* g_exe_name = GetExeName().c_str();
-
-struct Process {
-    pid_t pid;
-};
-typedef std::map<pid_t, Process> ProcessMap;
-static ProcessMap s_processes; // Current running worker processes
-static ProcessMap s_exiting_processes; // worker processes which are exiting
 static void sigchld(int) {}
 
-static void KillAllChildren() {
-    s_exiting_processes = s_processes;
-    ProcessMap::iterator it(s_processes.begin());
-    ProcessMap::iterator ite(s_processes.end());
+void Master::KillAllChildren() {
+    exiting_processes_ = running_processes_;
+    ProcessMap::iterator it(running_processes_.begin());
+    ProcessMap::iterator ite(running_processes_.end());
     for (; it != ite; ++it) {
-        //LOG(INFO) << "killing child(" << it->first << ")";
+        LOG(INFO) << "killing child(" << it->first << ")";
         kill(it->first, SIGTERM);
     }
-    s_processes.clear();
+    running_processes_.clear();
 }
 
-static pid_t SpawnChildWorker(sigset_t* sigset) {
+pid_t Master::SpawnChildWorker(const mpic::Option& op, sigset_t* sigset) {
+    google::FlushLogFiles(0);
     pid_t pid = fork();
     if (pid < 0) {
-        abort();
+        PLOG(FATAL) << "fork() failed!!";
     } else if (pid == 0) {
         // child
-        std::string title = std::string(g_exe_name) + "(mpic): worker process";
-        Title::Set(title);
+        LOG(INFO) << "in child process, child (" << getpid() << ") started";
         sigprocmask(SIG_UNBLOCK, sigset, NULL);
-        s_processes.clear(); // Now we don't need to use it in children worker process
+        if (!op.foreground()) {
+            std::string title_prefix = mpic::Option::GetExeName() + "(" + op.name() + "): worker process";
+            mpic::Title::Set(title_prefix);
+        }
+
+        running_processes_.clear(); // Now we don't need to use it in children worker process
+        exiting_processes_.clear();
+
+        google::ShutdownGoogleLogging();
+        google::InitGoogleLogging(mpic::Option::GetExeName().data());
         exit(Master::instance().worker_main_routine()());
-    } else if (pid > 0) {
-        // parent
     }
 
     // parent
     assert(pid > 0);
+    LOG(INFO) << "in master process, child(" << pid << ") started";
 
     Process p;
     p.pid = pid;
-    s_processes[pid] = p;
+    running_processes_[pid] = p;
     return pid;
 }
 
-static void SpawnChildWorkers(sigset_t* sigset) {
-    for (int i = 0; i < Master::instance().worker_processes(); ++i) {
-        SpawnChildWorker(sigset);
+void Master::SpawnChildWorkers(const mpic::Option& op, sigset_t* sigset) {
+    for (int i = 0; i < op.worker_processes(); ++i) {
+        SpawnChildWorker(op, sigset);
     }
 }
 
-static int RunMaster() {
-    std::string title = std::string(g_exe_name) + "(mpic): master process";
-    Title::Set(title);
+int Master::RunMaster(const mpic::Option& op) {
+    LOG(INFO) << "Entering " << __func__ << " ...";
+
+    std::string origin_title = op.original_cmdline();
+    std::string title_prefix = mpic::Option::GetExeName() + "(" + op.name() + "): master process";
+    mpic::Title::Set(title_prefix + origin_title);
 
     sigset_t sigset;
     sigemptyset(&sigset);
@@ -111,7 +85,7 @@ static int RunMaster() {
     sigprocmask(SIG_BLOCK, &sigset, NULL);
     signal(SIGCHLD, sigchld);
 
-    SpawnChildWorkers(&sigset);
+    SpawnChildWorkers(op, &sigset);
 
     bool exiting = false;
 
@@ -122,73 +96,92 @@ static int RunMaster() {
             if (errno == EINTR || errno == EAGAIN) {
                 continue;
             }
+            PLOG(ERROR) << "sigwaitinfo: ";
             return 1;
         }
 
         if (sig.si_signo == SIGCHLD) {
-            //LOG(INFO) << "child signal recved";
+            LOG(INFO) << "child signal received";
             for (;;) {
                 int status = 0;
                 pid_t pid = ::waitpid(-1, &status, WNOHANG);
                 if (pid < 0) {
-                    //PLOG(ERROR) << "waitpid()";
+                    PLOG(ERROR) << "waitpid()";
                     break;
                 } else if (pid == 0) {
-                    //PLOG(ERROR) << "waitpid() return 0";
+                    PLOG(ERROR) << "waitpid() return 0";
                     break;
                 }
 
                 if (WIFEXITED(status)) {
-                    //LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
+                    LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
                 } else if (WIFSIGNALED(status)) {
-                    //LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
+                    LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
                 } else if (WCOREDUMP(status)) {
-                    //LOG(INFO) << "child(" << pid << ") core dumped";
+                    LOG(INFO) << "child(" << pid << ") core dumped";
                 } else {
-                    //LOG(INFO) << "child(" << pid << ") XXX";
+                    LOG(INFO) << "child(" << pid << ") XXX";
                     continue;
                 }
 
-                if (s_exiting_processes.find(pid) != s_exiting_processes.end()) {
-                    s_exiting_processes.erase(pid);
-                    //LOG(INFO) << "erased pid(" << pid << ") from s_exiting_processes. now s_exiting_processes num=" << s_exiting_processes.size();
+                if (exiting_processes_.find(pid) != exiting_processes_.end()) {
+                    exiting_processes_.erase(pid);
+                    LOG(INFO) << "erased pid(" << pid << ") from s_exiting_processes. now s_exiting_processes num=" << exiting_processes_.size();
                 }
 
-                if (s_processes.find(pid) != s_processes.end()) {
-                    s_processes.erase(pid);
-                    SpawnChildWorker(&sigset);
+                if (running_processes_.find(pid) != running_processes_.end()) {
+                    running_processes_.erase(pid);
+                    SpawnChildWorker(op, &sigset);
                 }
             }
+
             if (exiting) {
                 break;
             }
         } else if (sig.si_signo == SIGHUP) {
-            //LOG(INFO) << "SIGHUP reload signal recved. signo=" << sig.si_signo;
-            if (!s_exiting_processes.empty()) {
-                //LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
+            LOG(INFO) << "SIGHUP reload signal recved. signo=" << sig.si_signo;
+            if (!exiting_processes_.empty()) {
+                LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
                 continue;
             }
+            // TODO FIX bug : this code must be spawn children first and then kill old children.
             KillAllChildren();
-            SpawnChildWorkers(&sigset);
+            SpawnChildWorkers(op, &sigset);
         } else if (sig.si_signo == SIGTERM) {
-            //LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
+            LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
             KillAllChildren();
             exiting = true;
         } else {
-            //LOG(ERROR) << "signal recved. signo=" << sig.si_signo << " , nO process handler";
+            LOG(ERROR) << "signal recved. signo=" << sig.si_signo << " , nO process handler";
         }
     }
     return 0;
 }
 
+int Master::RunMainRoutine(const mpic::Option& op) {
+    FLAGS_stderrthreshold = 0;
+    FLAGS_log_dir = op.log_dir();
 
-static int RunAsDaemon() {
+    if (op.foreground()) {
+        google::InitGoogleLogging(mpic::Option::GetExeName().data());
+        return Master::instance().worker_main_routine()();
+    } else {
+        google::InitGoogleLogging("master");
+        return RunMaster(op);
+    }
+}
+
+int Master::RunForeground(const mpic::Option& op) {
+    return RunMainRoutine(op);
+}
+
+int Master::RunAsDaemon(const mpic::Option& op) {
     daemon_pid_file_proc = PidFileName;
-    daemon_log_ident = "mpic-app";
+    daemon_log_ident = op.name().c_str();
 
     pid_t pid = daemon_pid_file_is_running();
     if (pid >= 0) {
-        daemon_log(LOG_ERR, "%s daemon is already running, pid=%d", g_exe_name, pid);
+        daemon_log(LOG_ERR, "%s daemon is already running, pid=%d", GetExeName(), pid);
         return 1;
     }
     if (daemon_retval_init() != 0) {
@@ -212,10 +205,10 @@ static int RunAsDaemon() {
         }
         switch (retval) {
         case 0:
-            daemon_log(LOG_ERR, "%s daemon started, pid=%d", g_exe_name, pid);
+            daemon_log(LOG_ERR, "%s daemon started, pid=%d", GetExeName(), pid);
             break;
         default:
-            daemon_log(LOG_ERR, "%s daemon_retval_wait ERROR, retval=%d", g_exe_name, retval);
+            daemon_log(LOG_ERR, "%s daemon_retval_wait ERROR, retval=%d", GetExeName(), retval);
             break;
         }
         return retval;
@@ -231,31 +224,55 @@ static int RunAsDaemon() {
         }
         if (daemon_pid_file_create() != 0) {
             daemon_log(LOG_ERR, "can't write pid file %s: %s",
-                       PidFileName(), strerror(errno));
+                       op.pid_file().c_str(), strerror(errno));
             retval = 2;
             goto finish;
         }
         daemon_retval_send(0);
-        daemon_log(LOG_INFO, "%s daemon start ok.", g_exe_name);
+        daemon_log(LOG_INFO, "%s daemon start ok.", GetExeName());
         umask(022);
-        RunMaster();
-finish:
+        RunMainRoutine(op);
+    finish:
         if (retval != 0) {
             daemon_retval_send(retval);
         }
-        daemon_log(LOG_INFO, "%s daemon exiting...", g_exe_name);
+        daemon_log(LOG_INFO, "%s daemon exiting...", GetExeName());
         daemon_pid_file_remove();
         return retval;
     }
 }
 
-static int ReloadDaemon() {
+int Master::KillDaemon(const mpic::Option& op) {
+    daemon_pid_file_proc = PidFileName;
+    pid_t pid = daemon_pid_file_is_running();
+    if (pid > 0) {
+        fprintf(stdout, "%s(%s) is running, pid=%d\n",
+                GetExeName(), op.name().c_str(), pid);
+        if (daemon_pid_file_kill_wait(SIGTERM, 5)) {
+            if (errno == ETIME) {
+                fprintf(stderr, "%s is still running, "
+                        "maybe waiting for flush logs\n.", GetExeName());
+            } else {
+                fprintf(stderr, "can't kill: %s\n", strerror(errno));
+            }
+            return 1;
+        }
+        fprintf(stdout, "killed\n");
+        return 0;
+    } else {
+        fprintf(stderr, "%s(%s) is not running\n",
+                GetExeName(), op.name().c_str());
+        return 1;
+    }
+}
+
+int Master::ReloadDaemon(const mpic::Option& op) {
     daemon_pid_file_proc = PidFileName;
 
     pid_t pid = daemon_pid_file_is_running();
     if (pid > 0) {
         fprintf(stdout, "%s(%s) is running, pid=%d\n",
-                g_exe_name, g_exe_name, pid);
+                GetExeName(), op.name().c_str(), pid);
         if (daemon_pid_file_kill(SIGHUP)) {
             fprintf(stderr, "can't reload: %s\n", strerror(errno));
             return 1;
@@ -264,31 +281,63 @@ static int ReloadDaemon() {
         return 0;
     } else {
         fprintf(stderr, "%s(%s) is not running\n",
-                g_exe_name, g_exe_name);
+                GetExeName(), op.name().c_str());
         return 1;
     }
 }
 
-
+int Master::CheckStatus(const mpic::Option& op) {
+    daemon_pid_file_proc = PidFileName;
+    pid_t pid = daemon_pid_file_is_running();
+    if (pid > 0) {
+        fprintf(stdout, "%s(%s) is running, pid=%d\n",
+                GetExeName(), op.name().c_str(), pid);
+        return 0;
+    } else {
+        fprintf(stderr, "%s(%s) is not running\n",
+                GetExeName(), op.name().c_str());
+        return 1;
+    }
 }
 
-Master::Master() : worker_processes_(1) {
+Master::Master() {
 }
 
 Master::~Master() {
 }
 
 int Master::Run(WorkerMainRoutine worker_main) {
+
     worker_main_routine_ = worker_main;
-    return detail::RunAsDaemon();
+
+    if (option_->kill()) {
+        return KillDaemon(*option_);
+    }
+
+    if (option_->reload()) {
+        return ReloadDaemon(*option_);
+    }
+
+    if (option_->status()) {
+        return CheckStatus(*option_);
+    }
+
+    if (option_->foreground()) {
+        FLAGS_alsologtostderr = true;
+        return RunForeground(*option_);
+    } else {
+        return RunAsDaemon(*option_);
+    }
 }
 
-bool Master::Init(int argc, char** argv) {
-    Title::Init(argc, argv);
-    if (argc == 2) {
-        worker_processes_ = atoi(argv[1]);
+bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {
+    option_ = op;
+    mpic::Title::Init(argc, argv);
+    if (!option_->Init(argc, argv)) {
+        return false;
     }
     return true;
 }
+
 
 }
