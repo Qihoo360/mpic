@@ -43,8 +43,7 @@ bool FileUtil::IsDir(const std::string& strFileName) {
         return false;
     }
 
-    if (S_ISDIR(st.st_mode))
-    {
+    if (S_ISDIR(st.st_mode)) {
         return true;
     }
 

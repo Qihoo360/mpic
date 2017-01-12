@@ -78,7 +78,7 @@ private:
 
     struct Process {
         pid_t pid;
-        // Add other data field here. 
+        // Add other data field here.
         // PIPE fd
     };
     typedef std::map<pid_t, Process> ProcessMap;

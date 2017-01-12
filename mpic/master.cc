@@ -184,7 +184,7 @@ int Master::RunAsDaemon(const Option& op) {
 
     pid_t pid = daemon_pid_file_is_running();
     if (pid >= 0) {
-        daemon_log(LOG_ERR, "%s daemon is already running, pid=%d", GetExeName(), pid);
+        daemon_log(LOG_ERR, "%s daemon is already running, pid=%d, please kill it and then run it again.", GetExeName(), pid);
         return 1;
     }
     if (daemon_retval_init() != 0) {
@@ -235,7 +235,7 @@ int Master::RunAsDaemon(const Option& op) {
         daemon_log(LOG_INFO, "%s daemon start ok.", GetExeName());
         umask(022);
         RunMainRoutine(op);
-    finish:
+finish:
         if (retval != 0) {
             daemon_retval_send(retval);
         }
