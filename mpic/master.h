@@ -70,6 +70,8 @@ private:
     int ReloadDaemon(const mpic::Option& option);
     int CheckStatus(const mpic::Option& option);
 
+    void HandleSIGHUB(const mpic::Option& option, sigset_t* sigset);
+    void HandleSIGCHLD(const mpic::Option& option, sigset_t* sigset);
 private:
     std::shared_ptr<Option> option_;
     WorkerMainRoutine worker_main_routine_;

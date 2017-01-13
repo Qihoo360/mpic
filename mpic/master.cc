@@ -29,11 +29,17 @@ void Master::KillAllChildren(const ProcessMap& m) {
 
 pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
     google::FlushLogFiles(0);
+
+    //TODO
+    // new Resource
+    // new Module
+    // module.Init()
+    
     pid_t pid = fork();
     if (pid < 0) {
         PLOG(FATAL) << "fork() failed!!";
     } else if (pid == 0) {
-        // child
+        // child - worker process
         google::ShutdownGoogleLogging();
         google::InitGoogleLogging(Option::GetExeName().data());
 
@@ -53,7 +59,7 @@ pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
         exit(ret);
     }
 
-    // parent
+    // parent - master process
     assert(pid > 0);
     LOG(INFO) << "in master process, child(" << pid << ") started";
 
@@ -101,54 +107,12 @@ int Master::RunMaster(const Option& op) {
         }
 
         if (sig.si_signo == SIGCHLD) {
-            LOG(INFO) << "child signal received";
-            for (;;) {
-                int status = 0;
-                pid_t pid = ::waitpid(-1, &status, WNOHANG);
-                if (pid < 0) {
-                    PLOG(ERROR) << "waitpid()";
-                    break;
-                } else if (pid == 0) {
-                    PLOG(ERROR) << "waitpid() return 0";
-                    break;
-                }
-
-                if (WIFEXITED(status)) {
-                    LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
-                } else if (WIFSIGNALED(status)) {
-                    LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
-                } else if (WCOREDUMP(status)) {
-                    LOG(INFO) << "child(" << pid << ") core dumped";
-                } else {
-                    LOG(INFO) << "child(" << pid << ") XXX";
-                    continue;
-                }
-
-                if (exiting_processes_.find(pid) != exiting_processes_.end()) {
-                    exiting_processes_.erase(pid);
-                    LOG(INFO) << "erased pid(" << pid << ") from s_exiting_processes. now s_exiting_processes num=" << exiting_processes_.size();
-                }
-
-                if (running_processes_.find(pid) != running_processes_.end()) {
-                    running_processes_.erase(pid);
-                    SpawnChildWorker(op, &sigset);
-                }
-            }
-
+            HandleSIGCHLD(op, &sigset);
             if (exiting) {
                 break;
             }
         } else if (sig.si_signo == SIGHUP) {
-            LOG(INFO) << "SIGHUP reload signal recved. signo=" << sig.si_signo;
-            if (!exiting_processes_.empty()) {
-                LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
-                continue;
-            }
-            ProcessMap m;
-            m.swap(running_processes_);
-            SpawnChildWorkers(op, &sigset);
-            // TODO FIX : wait all children process has all initialized.
-            KillAllChildren(m);
+            HandleSIGHUB(op, &sigset);
         } else if (sig.si_signo == SIGTERM) {
             LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
             KillAllChildren(running_processes_);
@@ -159,6 +123,55 @@ int Master::RunMaster(const Option& op) {
         }
     }
     return 0;
+}
+
+void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
+    LOG(INFO) << "SIGHUP reload signal recved. signo=" << SIGHUP;
+    if (!exiting_processes_.empty()) {
+        LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
+        return;
+    }
+    ProcessMap m;
+    m.swap(running_processes_);
+    SpawnChildWorkers(op, sigset);
+    // TODO FIX : wait all children process has all initialized.
+    KillAllChildren(m);
+}
+
+void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {
+    LOG(INFO) << "child signal received";
+    for (;;) {
+        int status = 0;
+        pid_t pid = ::waitpid(-1, &status, WNOHANG);
+        if (pid < 0) {
+            PLOG(ERROR) << "waitpid()";
+            break;
+        } else if (pid == 0) {
+            PLOG(ERROR) << "waitpid() return 0";
+            break;
+        }
+
+        if (WIFEXITED(status)) {
+            LOG(INFO) << "child(" << pid << ") exited with " << WEXITSTATUS(status);
+        } else if (WIFSIGNALED(status)) {
+            LOG(INFO) << "child(" << pid << ") killed by signal " << WTERMSIG(status);
+        } else if (WCOREDUMP(status)) {
+            LOG(INFO) << "child(" << pid << ") core dumped";
+        } else {
+            LOG(INFO) << "child(" << pid << ") XXX";
+            continue;
+        }
+
+        if (exiting_processes_.find(pid) != exiting_processes_.end()) {
+            exiting_processes_.erase(pid);
+            LOG(INFO) << "erased pid(" << pid << ") from s_exiting_processes. now s_exiting_processes num=" << exiting_processes_.size();
+        }
+
+        if (running_processes_.find(pid) != running_processes_.end()) {
+            running_processes_.erase(pid);
+            SpawnChildWorker(op, sigset);
+        }
+    }
 }
 
 int Master::RunMainRoutine(const Option& op) {
