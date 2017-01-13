@@ -32,7 +32,7 @@ private:
 int RunWorker(const HttpOption* option) {
     LOG(INFO) << __func__ << " running ...";
     for (;;) {
-        LOG(INFO) << __func__ << " running http-port=" << option->http_port();
+        LOG(INFO) << __func__ << " pid=" << getpid() << " running http-port=" << option->http_port();
         google::FlushLogFiles(0);
         sleep(1);
     }

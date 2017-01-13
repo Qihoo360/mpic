@@ -8,8 +8,8 @@
 
 namespace mpic {
 
-bool FileUtil::IsFileExist(const std::string& strFileName) {
-    if (access(strFileName.c_str(), F_OK) != 0) {
+bool FileUtil::IsFileExist(const std::string& path) {
+    if (access(path.c_str(), F_OK) != 0) {
         return false;
     }
     return true;
@@ -22,9 +22,8 @@ bool FileUtil::IsReadable(const std::string& strFileNmae) {
     return true;
 }
 
-std::string FileUtil::GetFileNameWithoutExt(const std::string& strFileName) {
-    // since '/' equal to L'/', we can cast to either one.
-    std::string::size_type iStart = strFileName.find_last_of((std::string::value_type)'/');
+std::string FileUtil::GetFileNameWithoutExt(const std::string& path) {
+    size_t iStart = path.find_last_of((std::string::value_type)'/');
 
     if (iStart == std::string::npos) {
         iStart = 0;
@@ -33,13 +32,13 @@ std::string FileUtil::GetFileNameWithoutExt(const std::string& strFileName) {
         ++iStart;
     }
 
-    return strFileName.substr(iStart, strFileName.find_last_of((std::string::value_type)'.') - iStart);
+    return path.substr(iStart, path.find_last_of((std::string::value_type)'.') - iStart);
 }
 
 
-bool FileUtil::IsDir(const std::string& strFileName) {
+bool FileUtil::IsDir(const std::string& path) {
     struct stat st;
-    if (0 != stat(strFileName.c_str(), &st)) {
+    if (0 != ::stat(path.c_str(), &st)) {
         return false;
     }
 

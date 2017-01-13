@@ -208,7 +208,7 @@ int Master::RunAsDaemon(const Option& op) {
         }
         switch (retval) {
         case 0:
-            daemon_log(LOG_ERR, "%s daemon started, pid=%d", GetExeName(), pid);
+            daemon_log(LOG_ERR, "%s daemon has started successfully, pid=%d", GetExeName(), pid);
             break;
         default:
             daemon_log(LOG_ERR, "%s daemon_retval_wait ERROR, retval=%d", GetExeName(), retval);
