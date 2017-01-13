@@ -19,15 +19,12 @@ static const char* PidFileName() {
 
 static void sigchld(int) {}
 
-void Master::KillAllChildren() {
-    exiting_processes_ = running_processes_;
-    ProcessMap::iterator it(running_processes_.begin());
-    ProcessMap::iterator ite(running_processes_.end());
-    for (; it != ite; ++it) {
-        LOG(INFO) << "killing child(" << it->first << ")";
-        kill(it->first, SIGTERM);
+void Master::KillAllChildren(const ProcessMap& m) {
+    for (auto &e : m) {
+        LOG(INFO) << "killing child(" << e.first << ")";
+        kill(e.first, SIGTERM);
+        exiting_processes_[e.first] = e.second;
     }
-    running_processes_.clear();
 }
 
 pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
@@ -147,12 +144,15 @@ int Master::RunMaster(const Option& op) {
                 LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
                 continue;
             }
-            // TODO FIX bug : this code must be spawn children first and then kill old children.
-            KillAllChildren();
+            ProcessMap m;
+            m.swap(running_processes_);
             SpawnChildWorkers(op, &sigset);
+            // TODO FIX : wait all children process has all initialized.
+            KillAllChildren(m);
         } else if (sig.si_signo == SIGTERM) {
             LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
-            KillAllChildren();
+            KillAllChildren(running_processes_);
+            running_processes_.clear();
             exiting = true;
         } else {
             LOG(ERROR) << "signal recved. signo=" << sig.si_signo << " , nO process handler";

@@ -53,8 +53,6 @@ private:
         return mpic::Option::GetExeName().data();
     }
 
-    void KillAllChildren();
-
     pid_t SpawnChildWorker(const mpic::Option& option, sigset_t* sigset);
 
     void SpawnChildWorkers(const mpic::Option& option, sigset_t* sigset);
@@ -85,6 +83,8 @@ private:
     ProcessMap running_processes_; // Current running worker processes
     ProcessMap exiting_processes_; // worker processes which are exiting
 
+private:
+    void KillAllChildren(const ProcessMap& m);
 private:
     Master();
     Master(const Master& rhs) {}
