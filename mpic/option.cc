@@ -12,9 +12,10 @@
 #include "option.h"
 #include "file_util.h"
 
-DEFINE_string(config_file, "/tmp/mpic.conf", "The config file for the submodule");
-DEFINE_string(pid_file, "/tmp/mpic.pid", "The pid file of the process");
+DEFINE_string(config_file, "/tmp/mpic.conf", "The config file path for the submodule");
+DEFINE_string(pid_file, "/tmp/mpic.pid", "The pid file path of the process");
 DEFINE_string(name, "", "The name of the submodule");
+DEFINE_string(module_file, "/tmp/mpic.so", "The file path of the submodule");
 DEFINE_int32(worker_processes, 1, "The count of worker processes");
 DEFINE_bool(kill, false, "Kill the process");
 DEFINE_bool(reload, false, "Reload the process");
@@ -66,6 +67,7 @@ bool Option::Init(int argc, char** argv) {
     this->worker_processes_ = FLAGS_worker_processes;
     this->cfg_file_ = FLAGS_config_file;
     this->pid_file_ = FLAGS_pid_file;
+    this->module_file_ = FLAGS_module_file;
     this->name_ = FLAGS_name;
     this->log_dir_ = FLAGS_log_dir;
     if (this->name_.empty()) {
@@ -88,6 +90,12 @@ bool Option::Init(int argc, char** argv) {
     if (!FileUtil::IsFileExist(cfg_file_) ||
             !FileUtil::IsReadable(cfg_file_)) {
         std::cerr << "Can't find or read config file " << cfg_file_ << std::endl;
+        return false;
+    }
+
+    if (!FileUtil::IsFileExist(module_file_) ||
+            !FileUtil::IsReadable(module_file_)) {
+        std::cerr << "Can't find or read module file " << module_file_ << std::endl;
         return false;
     }
 

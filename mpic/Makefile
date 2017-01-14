@@ -21,7 +21,7 @@ CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++
 RTFLAGS := \
     -Wl,-rpath=. \
 
-LDFLAGS= $(RTFLAGS) -lpthread -lglog \
+LDFLAGS= $(RTFLAGS) -lglog -lpthread -ldl \
 
 SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c)
 OBJS := $(patsubst %, %.o, $(SRCS))

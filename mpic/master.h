@@ -11,6 +11,9 @@
 
 namespace mpic {
 
+class Resource;
+class Module;
+
 // 1 - Master process
 // N - Worker processes
 
@@ -31,19 +34,18 @@ public:
     bool Init(int argc, char** argv, std::shared_ptr<Option> op);
 
     /**
-     * @param worker_main - the child worker process main routine
      * @return 0 if OK, others failed
      */
-    int Run(WorkerMainRoutine worker_main);
+    int Run();
 
 public:
     const std::shared_ptr<Option>& option() const {
         return option_;
     }
 
-    WorkerMainRoutine worker_main_routine() {
-        return worker_main_routine_;
-    }
+    //WorkerMainRoutine worker_main_routine() {
+    //    return worker_main_routine_;
+    //}
 
     static Master& instance() {
         return instance_;
@@ -65,6 +67,9 @@ private:
 
     int RunAsDaemon(const mpic::Option& option);
 
+
+    bool InitModule();
+
     // ops interface : KillDaemon ReloadDaemon CheckStatus
     int KillDaemon(const mpic::Option& option);
     int ReloadDaemon(const mpic::Option& option);
@@ -74,7 +79,7 @@ private:
     void HandleSIGCHLD(const mpic::Option& option, sigset_t* sigset);
 private:
     std::shared_ptr<Option> option_;
-    WorkerMainRoutine worker_main_routine_;
+    //WorkerMainRoutine worker_main_routine_;
 
     struct Process {
         pid_t pid;
@@ -84,6 +89,11 @@ private:
     typedef std::map<pid_t, Process> ProcessMap;
     ProcessMap running_processes_; // Current running worker processes
     ProcessMap exiting_processes_; // worker processes which are exiting
+
+private:
+    std::shared_ptr<Resource> resource_;
+    std::shared_ptr<Module> module_;
+    void* dlmodule_;
 
 private:
     void KillAllChildren(const ProcessMap& m);
