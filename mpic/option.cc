@@ -1,7 +1,11 @@
 #include <string.h>
+
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+#include <direct.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <assert.h>
 
 #include <sstream>
@@ -9,6 +13,7 @@
 
 #include <gflags/gflags.h>
 
+#include "platform_config.h"
 #include "option.h"
 #include "file_util.h"
 
@@ -72,7 +77,11 @@ bool Option::Init(int argc, char** argv) {
 
     if (!FileUtil::IsDir(log_dir_)) {
         umask(002);
+#ifdef _WIN32
+        mkdir(log_dir_.c_str());
+#else
         mkdir(log_dir_.c_str(), 0775);
+#endif
         umask(022);
 
         if (!FileUtil::IsDir(log_dir_)) {
@@ -96,6 +105,10 @@ const std::string& Option::GetExeName() {
     static std::string name;
     if (name.empty()) {
         char buf[1024] = { 0 };
+#ifdef _WIN32
+        //::GetModuleFileNameA(NULL, buf, sizeof(buf));
+        name = "mpic"; // TODO FIX
+#else
         int count = readlink("/proc/self/exe", buf, 1024);
         if (count < 0 || count >= 1024) {
             printf("Failed to %s\n", __func__);
@@ -109,6 +122,7 @@ const std::string& Option::GetExeName() {
         } else {
             name = buf;
         }
+#endif
     }
 
     return name;
@@ -116,6 +130,9 @@ const std::string& Option::GetExeName() {
 
 
 std::string Option::RealPath(const std::string& path) {
+#ifdef _WIN32
+    return path; // TODO FIX
+#else
     assert(!path.empty());
     char buf[4096];
     char* p = realpath(path.c_str(), buf);
@@ -125,6 +142,7 @@ std::string Option::RealPath(const std::string& path) {
     }
 
     return std::string(p);
+#endif
 }
 }
 

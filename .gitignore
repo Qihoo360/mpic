@@ -13,5 +13,11 @@
 *.la
 *.a
 
+3rdparty/gflags-2.2.0/.vs/
+
+msvc/bin/
+msvc/libmpic.VC.VC.opendb
+msvc/libmpic.VC.db
+
 libmpic.so.*
 examples/daemon/daemon_test
