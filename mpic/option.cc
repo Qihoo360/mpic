@@ -25,11 +25,7 @@ DECLARE_string(log_dir);
 
 namespace mpic {
 
-//static const char* kCfgExt = ".conf";
-//static const char* kPidExt = ".pid";
-//static const char* kDefaultCfgDir = "/var/mpic/etc";
 static const char* kDefaultLogDir = "/tmp";
-//static const char* kDefaultPidDir = "/var/mpic/run";
 
 Option::Option()
     : initialized_(false)

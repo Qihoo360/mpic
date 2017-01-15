@@ -55,7 +55,7 @@ private:
     std::string original_cmdline_;
     bool initialized_;
 
-    // Options only init with cmdline.
+    // Options only init with command line.
     std::string name_;
     bool kill_;
     bool reload_;
