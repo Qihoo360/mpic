@@ -2,11 +2,13 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <string.h>
+#include <dlfcn.h>
 
 #include <libdaemon/daemon.h>
 #include <glog/logging.h>
 
 #include "./master.h"
+#include "./module.h"
 #include "./title.h"
 
 namespace mpic {
@@ -20,7 +22,7 @@ static const char* PidFileName() {
 static void sigchld(int) {}
 
 void Master::KillAllChildren(const ProcessMap& m) {
-    for (auto &e : m) {
+    for (auto& e : m) {
         LOG(INFO) << "killing child(" << e.first << ")";
         kill(e.first, SIGTERM);
         exiting_processes_[e.first] = e.second;
@@ -30,11 +32,6 @@ void Master::KillAllChildren(const ProcessMap& m) {
 pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
     google::FlushLogFiles(0);
 
-    //TODO
-    // new Resource
-    // new Module
-    // module.Init()
-    
     pid_t pid = fork();
     if (pid < 0) {
         PLOG(FATAL) << "fork() failed!!";
@@ -53,7 +50,7 @@ pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
             Title::Set(title_prefix);
         }
 
-        int ret = Master::instance().worker_main_routine()();
+        int ret = module_->Run();
         LOG(WARNING) << "child worker process (" << getpid() << ") exited with code " << ret;
         google::ShutdownGoogleLogging();
         exit(ret);
@@ -91,6 +88,15 @@ int Master::RunMaster(const Option& op) {
     sigprocmask(SIG_BLOCK, &sigset, NULL);
     signal(SIGCHLD, sigchld);
 
+    if (!InitModule()) {
+        LOG(ERROR) << "InitModule failed";
+        return 1;
+    }
+
+    if (option_->foreground()) {
+        return module_->Run();
+    }
+
     SpawnChildWorkers(op, &sigset);
 
     bool exiting = false;
@@ -123,6 +129,76 @@ int Master::RunMaster(const Option& op) {
         }
     }
     return 0;
+}
+
+
+bool Master::InitModule() {
+    void* dlptr  = dlopen(option_->module_file().c_str(), RTLD_LAZY);
+    if (!dlptr) {
+        LOG(ERROR) << "dlopen(" << option_->module_file() << ", ...): " << dlerror();
+        return false;
+    }
+
+    typedef Resource* (*ResourceLoader)();
+    typedef Module* (*ModuleLoader)();
+
+    // new Resource
+    const char* name = "MPIC_NewResource";
+    ResourceLoader rloader = (ResourceLoader)dlsym(dlptr, name);
+    if (!rloader) {
+        LOG(ERROR) << "dlsym(" << name << "): " << dlerror();
+        dlclose(dlptr);
+        return false;
+    }
+
+    try {
+        Resource* r  = rloader();
+        resource_.reset(r);
+        if (!r->Init(option_)) {
+            LOG(ERROR) << "Resource init failed ";
+            return false;
+        }
+    } catch (const std::exception& e) {
+        LOG(ERROR) << "Load module with exception: " << e.what();
+        dlclose(dlptr);
+        return false;
+    } catch (...) {
+        LOG(ERROR) << "Load module failed with unknown error";
+        dlclose(dlptr);
+        return false;
+    }
+
+
+    // new Module
+    name = "MPIC_NewModule";
+    ModuleLoader mloader = (ModuleLoader)dlsym(dlptr, name);
+
+    if (!mloader) {
+        LOG(ERROR) << "dlsym(" << name << "): " << dlerror();
+        dlclose(dlptr);
+        return false;
+    }
+    try {
+        Module* m  = mloader();
+        module_.reset(m);
+        m->SetResource(resource_.get());
+        if (!m->Init(option_)) {
+            LOG(ERROR) << "Resource init failed ";
+            return false;
+        }
+    } catch (const std::exception& e) {
+        LOG(ERROR) << "Load module with exception: " << e.what();
+        dlclose(dlptr);
+        return false;
+    } catch (...) {
+        LOG(ERROR) << "Load module failed with unknown error";
+        dlclose(dlptr);
+        return false;
+    }
+
+    dlmodule_ = dlptr;
+
+    return true;
 }
 
 void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
@@ -180,11 +256,10 @@ int Master::RunMainRoutine(const Option& op) {
 
     if (op.foreground()) {
         google::InitGoogleLogging(Option::GetExeName().data());
-        return Master::instance().worker_main_routine()();
     } else {
         google::InitGoogleLogging("master");
-        return RunMaster(op);
     }
+    return RunMaster(op);
 }
 
 int Master::RunForeground(const Option& op) {
@@ -316,15 +391,13 @@ int Master::CheckStatus(const Option& op) {
     }
 }
 
-Master::Master() {
+Master::Master() : dlmodule_(NULL) {
 }
 
 Master::~Master() {
 }
 
-int Master::Run(WorkerMainRoutine worker_main) {
-
-    worker_main_routine_ = worker_main;
+int Master::Run() {
 
     if (option_->kill()) {
         return KillDaemon(*option_);

@@ -40,6 +40,9 @@ public:
     const std::string& cfg_file() const {
         return cfg_file_;
     }
+    const std::string& module_file() const {
+        return module_file_;
+    }
     const std::string& original_cmdline() const {
         return original_cmdline_;
     }
@@ -66,6 +69,7 @@ private:
     std::string log_dir_;
     std::string pid_file_;
     std::string cfg_file_;
+    std::string module_file_; // the module so file path
     int worker_processes_; // The number of worker processes
 };
 }
