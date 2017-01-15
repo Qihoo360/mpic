@@ -1,5 +1,3 @@
-#include <glog/logging.h>
-
 #include "./master.h"
 #include "./module.h"
 #include "./option.h"

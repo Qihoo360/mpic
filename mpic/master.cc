@@ -2,8 +2,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include <glog/logging.h>
-
 #include "./master.h"
 #include "./module.h"
 #include "./title.h"

@@ -5,11 +5,14 @@
 #include <stdio.h>
 
 #include <gflags/gflags.h>
-#include <glog/logging.h>
 
 #include "mpic/exp.h"
 #include "mpic/master.h"
 #include "mpic/title.h"
+
+#ifdef H_OS_WINDOWS
+#pragma comment(lib,"libmpic.lib")
+#endif
 
 DEFINE_int32(http_port, 80, "The listening port of the http server");
 
@@ -45,6 +48,7 @@ int main(int argc, char* argv[]) {
     if (pm.Init(argc, argv, op)) {
         return pm.Run();
     } else {
+        LOG(ERROR) << "master init failed.";
         return -1;
     }
 }

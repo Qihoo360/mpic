@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include <libdaemon/daemon.h>
-#include <glog/logging.h>
 
 #include "./master.h"
 #include "./module.h"

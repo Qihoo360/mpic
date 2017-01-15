@@ -17,6 +17,7 @@
     <ClCompile Include="..\mpic\master.cc" />
     <ClCompile Include="..\mpic\master_linux.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\mpic\master_win32.cc" />
     <ClCompile Include="..\mpic\option.cc" />
