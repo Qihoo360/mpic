@@ -51,7 +51,7 @@ public:
     }
 
 private:
-    const char* GetExeName();
+    const char* GetExeName() const;
 
     int RunMaster(const mpic::Option& option);
 

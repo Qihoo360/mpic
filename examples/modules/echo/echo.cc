@@ -12,7 +12,7 @@ namespace echo {
     int EchoModule::Run() {
         LOG(INFO) << __FUNCTION__ << " running ...";
         for (;;) {
-            LOG(INFO) << __FUNCTION__ << " pid=" << getpid() << " running ...";
+            LOG(INFO) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
             google::FlushLogFiles(0);
             sleep(1);
         }

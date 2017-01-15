@@ -21,5 +21,6 @@ msvc/libmpic.VC.db
 
 libmpic.so.*
 examples/daemon/daemon_test
+examples/mpic-framework/mpic-framework
 
 msvc/.vs/

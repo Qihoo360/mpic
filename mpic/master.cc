@@ -46,9 +46,16 @@ bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {
 }
 
 bool Master::InitModule() {
-    dlmodule_.reset(new DynLib(option_->module_file()));
+    std::string module_path = option_->module_file();
+    if (!FileUtil::IsFileExist(module_path) ||
+            !FileUtil::IsReadable(module_path)) {
+        std::cerr << "Can't find or read module file " << module_path << std::endl;
+        return false;
+    }
+
+    dlmodule_.reset(new DynLib(module_path));
     if (!dlmodule_->Load()) {
-        LOG(ERROR) << "dlopen(" << option_->module_file() << ", ...): " << dlmodule_->GetLastError();
+        LOG(ERROR) << "dlopen(" << module_path << ", ...): " << dlmodule_->GetLastError();
         return false;
     }
 
@@ -104,6 +111,10 @@ bool Master::InitModule() {
     }
 
     return true;
+}
+
+const char* Master::GetExeName() const {
+    return Option::GetExeName().data();
 }
 
 }

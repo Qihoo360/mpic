@@ -97,12 +97,6 @@ bool Option::Init(int argc, char** argv) {
         return false;
     }
 
-    if (!FileUtil::IsFileExist(module_file_) ||
-            !FileUtil::IsReadable(module_file_)) {
-        std::cerr << "Can't find or read module file " << module_file_ << std::endl;
-        return false;
-    }
-
     initialized_ = true;
 
     return true;
