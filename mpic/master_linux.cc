@@ -13,8 +13,6 @@
 
 namespace mpic {
 
-Master Master::instance_;
-
 static const char* PidFileName() {
     return Master::instance().option()->pid_file().c_str();
 }

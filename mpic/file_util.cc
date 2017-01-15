@@ -1,11 +1,10 @@
 
 #include "file_util.h"
 
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef _WIN32
-#include <unistd.h>
-#endif
+#include <assert.h>
 
 #include "platform_config.h"
 

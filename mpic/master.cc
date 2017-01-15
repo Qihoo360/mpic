@@ -14,16 +14,8 @@ namespace mpic {
 
 Master Master::instance_;
 
-static const char* PidFileName() {
-    return Master::instance().option()->pid_file().c_str();
-}
-
 static void sigchld(int) {}
 
-
-const char* Master::GetExeName() {
-    return mpic::FileUtil::GetExeName().data();
-}
 
 int Master::RunMainRoutine(const Option& op) {
     FLAGS_stderrthreshold = 0;
