@@ -22,6 +22,11 @@ int Master::RunMaster(const Option& op) {
 
     return 0;
 }
+
+int Master::Run() {
+    FLAGS_alsologtostderr = true;
+    return RunForeground(*option_);
+}
 #endif
 
 }
