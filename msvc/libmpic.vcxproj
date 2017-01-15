@@ -14,25 +14,25 @@
     <ClCompile Include="..\mpic\internal\dynlib.cc" />
     <ClCompile Include="..\mpic\internal\file_util.cc" />
     <ClCompile Include="..\mpic\internal\inner_pre.cc" />
-    <ClCompile Include="..\mpic\internal\title.cc" />
     <ClCompile Include="..\mpic\master.cc" />
     <ClCompile Include="..\mpic\master_linux.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\mpic\master_win32.cc" />
     <ClCompile Include="..\mpic\option.cc" />
+    <ClCompile Include="..\mpic\title.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\mpic\internal\dynlib.h" />
     <ClInclude Include="..\mpic\internal\file_util.h" />
     <ClInclude Include="..\mpic\internal\inner_pre.h" />
-    <ClInclude Include="..\mpic\internal\title.h" />
     <ClInclude Include="..\mpic\master.h" />
     <ClInclude Include="..\mpic\module.h" />
     <ClInclude Include="..\mpic\option.h" />
     <ClInclude Include="..\mpic\mpic_export.h" />
     <ClInclude Include="..\mpic\exp.h" />
     <ClInclude Include="..\mpic\platform_config.h" />
+    <ClInclude Include="..\mpic\title.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4877AA94-AD55-407F-9ED3-D4503FAB2A7F}</ProjectGuid>
@@ -105,7 +105,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OutDir);d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

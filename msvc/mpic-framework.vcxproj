@@ -10,10 +10,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\examples\mpic-framework\main.cc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B2ACE5F6-CDA2-4A3E-869C-5E2CA8ED43EE}</ProjectGuid>
+    <ProjectGuid>{850BD7DF-6C53-41B9-9521-B093DFFB2E03}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>echo</RootNamespace>
+    <RootNamespace>httpecho</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -58,12 +61,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/wininclude/event;../3rdparty/glog-0.3.4/src/windows;d:/cppworkspace/boost_1_58_0;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,22 +79,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/wininclude/event;../3rdparty/glog-0.3.4/src/windows;d:/cppworkspace/boost_1_58_0;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OutDir);d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\examples\echo\main.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\examples\echo\winmain-inl.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

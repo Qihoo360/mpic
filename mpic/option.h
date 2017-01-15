@@ -53,6 +53,7 @@ public:
         return worker_processes_;
     }
 
+    static const std::string& GetExeName();
 private:
     std::string original_cmdline_;
     bool initialized_;

@@ -107,6 +107,8 @@
 #define umask _umask
 #define mkdir _mkdir
 #define access _access
+#define getpid _getpid
+#define sleep(sec) Sleep(sec*1000)
 // 00
 // Existence only
 // 
@@ -187,6 +189,7 @@
 #include <direct.h>
 #include <io.h>
 #include <Windows.h>
+#include <process.h>
 #else
 #include <unistd.h>
 #include <sys/stat.h>

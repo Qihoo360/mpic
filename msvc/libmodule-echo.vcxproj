@@ -10,21 +10,28 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\examples\modules\echo\echo.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\examples\modules\echo\echo.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{850BD7DF-6C53-41B9-9521-B093DFFB2E03}</ProjectGuid>
+    <ProjectGuid>{7AB9B703-2311-412F-8B43-2571DC89E1BF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>httpecho</RootNamespace>
+    <RootNamespace>libecho</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>libechomod</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -41,12 +48,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(SolutionDir)bin/obj/$(Configuration)/$(ProjectName)/</IntDir>
     <OutDir>$(SolutionDir)bin/$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)bin/obj/$(Configuration)/$(ProjectName)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)bin/obj/$(Configuration)/$(ProjectName)/</IntDir>
   </PropertyGroup>
@@ -56,14 +61,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/wininclude/event;../3rdparty/glog-0.3.4/src/windows;d:/cppworkspace/boost_1_58_0;..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);H_WINDOWS_API;GLUEASYNC_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,21 +80,18 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/wininclude/event;../3rdparty/glog-0.3.4/src/windows;d:/cppworkspace/boost_1_58_0;..</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);H_WINDOWS_API;GLUEASYNC_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OutDir);d:\cppworkspace\boost_1_58_0\output\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\examples\httpecho\main.cc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

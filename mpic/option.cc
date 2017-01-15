@@ -108,5 +108,32 @@ bool Option::Init(int argc, char** argv) {
     return true;
 }
 
+const std::string& Option::GetExeName() {
+    static std::string name;
+    if (name.empty()) {
+        char buf[1024] = { 0 };
+#ifdef _WIN32
+        //::GetModuleFileNameA(NULL, buf, sizeof(buf));
+        name = "mpic"; // TODO FIX
+#else
+        int count = readlink("/proc/self/exe", buf, 1024);
+        if (count < 0 || count >= 1024) {
+            printf("Failed to %s\n", __func__);
+            return name;
+        }
+        buf[count] = '\0';
+
+        const char* n = strrchr(buf, '/');
+        if (n) {
+            name = n + 1;
+        } else {
+            name = buf;
+        }
+#endif
+    }
+
+    return name;
+}
+
 }
 

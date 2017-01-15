@@ -6,7 +6,7 @@
 
 #include "./master.h"
 #include "./module.h"
-#include "./internal/title.h"
+#include "./title.h"
 #include "./internal/file_util.h"
 #include "internal/dynlib.h"
 
@@ -14,15 +14,12 @@ namespace mpic {
 
 Master Master::instance_;
 
-static void sigchld(int) {}
-
-
 int Master::RunMainRoutine(const Option& op) {
     FLAGS_stderrthreshold = 0;
     FLAGS_log_dir = op.log_dir();
 
     if (op.foreground()) {
-        google::InitGoogleLogging(FileUtil::GetExeName().data());
+        google::InitGoogleLogging(Option::GetExeName().data());
     } else {
         google::InitGoogleLogging("master");
     }
@@ -108,6 +105,5 @@ bool Master::InitModule() {
 
     return true;
 }
-
 
 }
