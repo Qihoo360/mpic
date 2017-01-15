@@ -184,6 +184,7 @@
      static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 
 #ifdef H_OS_WINDOWS
+#include <direct.h>
 #include <io.h>
 #else
 #include <sys/stat.h>
