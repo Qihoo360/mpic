@@ -7,7 +7,7 @@
 #include <map>
 
 #include "platform_config.h"
-#include "inner_pre.h"
+#include "internal/inner_pre.h"
 
 #include "option.h"
 

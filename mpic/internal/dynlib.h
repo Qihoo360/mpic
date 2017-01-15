@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mpic/inner_pre.h"
+#include "inner_pre.h"
 
 namespace mpic {
 

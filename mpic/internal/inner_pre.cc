@@ -1,4 +1,4 @@
-#include "mpic/inner_pre.h"
+#include "inner_pre.h"
 
 #ifdef H_OS_WINDOWS
 #pragma comment(lib,"gflags_static.lib")

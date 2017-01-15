@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "inner_pre.h"
+#include "internal/inner_pre.h"
 
 namespace mpic {
 

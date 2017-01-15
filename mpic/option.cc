@@ -14,7 +14,7 @@
 
 #include "platform_config.h"
 #include "option.h"
-#include "file_util.h"
+#include "internal/file_util.h"
 
 DEFINE_string(config_file, "/tmp/mpic.conf", "The config file path for the submodule");
 DEFINE_string(pid_file, "/tmp/mpic.pid", "The pid file path of the process");

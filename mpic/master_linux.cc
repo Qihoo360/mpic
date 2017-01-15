@@ -8,8 +8,8 @@
 
 #include "./master.h"
 #include "./module.h"
-#include "./title.h"
-#include "./file_util.h"
+#include "./internal/title.h"
+#include "./internal/file_util.h"
 
 namespace mpic {
 
