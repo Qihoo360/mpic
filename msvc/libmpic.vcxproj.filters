@@ -13,17 +13,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\mpic\inner_pre.cc">
-      <Filter>common</Filter>
-    </ClCompile>
     <ClCompile Include="..\mpic\option.cc">
       <Filter>multiproc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mpic\file_util.cc">
-      <Filter>misc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mpic\title.cc">
-      <Filter>misc</Filter>
     </ClCompile>
     <ClCompile Include="..\mpic\internal\dynlib.cc">
       <Filter>misc</Filter>
@@ -37,12 +28,18 @@
     <ClCompile Include="..\mpic\master.cc">
       <Filter>multiproc</Filter>
     </ClCompile>
+    <ClCompile Include="..\mpic\internal\file_util.cc">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\internal\inner_pre.cc">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\internal\title.cc">
+      <Filter>misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\mpic\exp.h">
-      <Filter>common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mpic\inner_pre.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\mpic\mpic_export.h">
@@ -57,17 +54,20 @@
     <ClInclude Include="..\mpic\master.h">
       <Filter>multiproc</Filter>
     </ClInclude>
-    <ClInclude Include="..\mpic\file_util.h">
-      <Filter>misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mpic\title.h">
-      <Filter>misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\mpic\internal\dynlib.h">
       <Filter>misc</Filter>
     </ClInclude>
     <ClInclude Include="..\mpic\module.h">
       <Filter>multiproc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\internal\file_util.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\internal\inner_pre.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\internal\title.h">
+      <Filter>misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

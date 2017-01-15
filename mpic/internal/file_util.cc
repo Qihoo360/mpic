@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <assert.h>
 
-#include "platform_config.h"
+#include "../platform_config.h"
 
 namespace mpic {
 
