@@ -2,9 +2,11 @@
 
 #include <string>
 
+#include "inner_pre.h"
+
 namespace mpic {
 
-class Option {
+class MPIC_EXPORT Option {
 public:
     Option();
     virtual ~Option();
@@ -50,9 +52,6 @@ public:
     int worker_processes() const {
         return worker_processes_;
     }
-
-    static const std::string& GetExeName();
-    static std::string RealPath(const std::string& path);
 
 private:
     std::string original_cmdline_;

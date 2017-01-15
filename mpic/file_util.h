@@ -19,6 +19,9 @@ public:
     static bool IsReadable(const std::string& filepath);
 
     static bool IsDir(const std::string& filepath);
+
+    static const std::string& GetExeName();
+    static std::string RealPath(const std::string& path);
 };
 
 }

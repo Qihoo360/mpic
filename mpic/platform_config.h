@@ -185,8 +185,11 @@
 
 #ifdef H_OS_WINDOWS
 #include <io.h>
+#include <Windows.h>
 #else
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <dlfcn.h>
 #endif
+

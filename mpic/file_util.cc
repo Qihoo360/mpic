@@ -53,5 +53,49 @@ bool FileUtil::IsDir(const std::string& path) {
 }
 
 
+const std::string& FileUtil::GetExeName() {
+    static std::string name;
+    if (name.empty()) {
+        char buf[1024] = { 0 };
+#ifdef _WIN32
+        //::GetModuleFileNameA(NULL, buf, sizeof(buf));
+        name = "mpic"; // TODO FIX
+#else
+        int count = readlink("/proc/self/exe", buf, 1024);
+        if (count < 0 || count >= 1024) {
+            printf("Failed to %s\n", __func__);
+            return name;
+        }
+        buf[count] = '\0';
+
+        const char* n = strrchr(buf, '/');
+        if (n) {
+            name = n + 1;
+        } else {
+            name = buf;
+        }
+#endif
+    }
+
+    return name;
+}
+
+
+std::string FileUtil::RealPath(const std::string& path) {
+#ifdef _WIN32
+    return path; // TODO FIX
+#else
+    assert(!path.empty());
+    char buf[4096];
+    char* p = realpath(path.c_str(), buf);
+    if (p == NULL) {
+        std::cout << "convert relative path: " << path
+            << " to real path error: " << strerror(errno);
+    }
+
+    return std::string(p);
+#endif
+}
+
 }
 

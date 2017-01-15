@@ -8,6 +8,9 @@
     <Filter Include="multiproc">
       <UniqueIdentifier>{a362efb3-9233-4b97-800d-ec73e6f1ceae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{1ed34377-87e3-4a82-82c8-f95fdc402ec2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\mpic\inner_pre.cc">
@@ -17,9 +20,18 @@
       <Filter>multiproc</Filter>
     </ClCompile>
     <ClCompile Include="..\mpic\file_util.cc">
-      <Filter>multiproc</Filter>
+      <Filter>misc</Filter>
     </ClCompile>
     <ClCompile Include="..\mpic\title.cc">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\internal\dynlib.cc">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\master_linux.cc">
+      <Filter>multiproc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\master_win32.cc">
       <Filter>multiproc</Filter>
     </ClCompile>
     <ClCompile Include="..\mpic\master.cc">
@@ -42,13 +54,19 @@
     <ClInclude Include="..\mpic\option.h">
       <Filter>multiproc</Filter>
     </ClInclude>
-    <ClInclude Include="..\mpic\file_util.h">
+    <ClInclude Include="..\mpic\master.h">
       <Filter>multiproc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\file_util.h">
+      <Filter>misc</Filter>
     </ClInclude>
     <ClInclude Include="..\mpic\title.h">
-      <Filter>multiproc</Filter>
+      <Filter>misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\mpic\master.h">
+    <ClInclude Include="..\mpic\internal\dynlib.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\module.h">
       <Filter>multiproc</Filter>
     </ClInclude>
   </ItemGroup>

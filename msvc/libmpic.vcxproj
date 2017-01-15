@@ -12,14 +12,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\mpic\file_util.cc" />
+    <ClCompile Include="..\mpic\internal\dynlib.cc" />
     <ClCompile Include="..\mpic\master.cc" />
+    <ClCompile Include="..\mpic\master_linux.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\mpic\master_win32.cc" />
     <ClCompile Include="..\mpic\option.cc" />
     <ClCompile Include="..\mpic\inner_pre.cc" />
     <ClCompile Include="..\mpic\title.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\mpic\file_util.h" />
+    <ClInclude Include="..\mpic\internal\dynlib.h" />
     <ClInclude Include="..\mpic\master.h" />
+    <ClInclude Include="..\mpic\module.h" />
     <ClInclude Include="..\mpic\option.h" />
     <ClInclude Include="..\mpic\mpic_export.h" />
     <ClInclude Include="..\mpic\exp.h" />
