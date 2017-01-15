@@ -3,7 +3,6 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <direct.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <assert.h>

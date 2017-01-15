@@ -9,6 +9,7 @@
 #include "./master.h"
 #include "./module.h"
 #include "./title.h"
+#include "./file_util.h"
 
 namespace mpic {
 
@@ -37,7 +38,7 @@ pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
     } else if (pid == 0) {
         // child - worker process
         google::ShutdownGoogleLogging();
-        google::InitGoogleLogging(Option::GetExeName().data());
+        google::InitGoogleLogging(FileUtil::GetExeName().data());
 
         running_processes_.clear(); // Now we don't need to use it in children worker process
         exiting_processes_.clear();
@@ -45,7 +46,7 @@ pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
         LOG(INFO) << "in child process, child (" << getpid() << ") started";
         sigprocmask(SIG_UNBLOCK, sigset, NULL);
         if (!op.foreground()) {
-            std::string title_prefix = Option::GetExeName() + "(" + op.name() + "): worker process";
+            std::string title_prefix = FileUtil::GetExeName() + "(" + op.name() + "): worker process";
             Title::Set(title_prefix);
         }
 
@@ -75,7 +76,7 @@ int Master::RunMaster(const Option& op) {
     LOG(INFO) << "Entering " << __func__ << " ...";
 
     std::string origin_title = op.original_cmdline();
-    std::string title_prefix = Option::GetExeName() + "(" + op.name() + "): master process";
+    std::string title_prefix = FileUtil::GetExeName() + "(" + op.name() + "): master process";
     Title::Set(title_prefix + origin_title);
 
     sigset_t sigset;
@@ -184,7 +185,7 @@ void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {
 //     FLAGS_log_dir = op.log_dir();
 // 
 //     if (op.foreground()) {
-//         google::InitGoogleLogging(Option::GetExeName().data());
+//         google::InitGoogleLogging(FileUtil::GetExeName().data());
 //     } else {
 //         google::InitGoogleLogging("master");
 //     }

@@ -23,7 +23,7 @@ RTFLAGS := \
 
 LDFLAGS= $(RTFLAGS) -lglog -lpthread -ldl \
 
-SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c)
+SRCS := $(wildcard *.cc) $(wildcard $(LIBDAEMON_PATH)/libdaemon/*.c) $(wildcard internal/*.cc) 
 OBJS := $(patsubst %, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 
