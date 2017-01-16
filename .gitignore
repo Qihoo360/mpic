@@ -22,5 +22,8 @@ msvc/libmpic.VC.db
 libmpic.so.*
 examples/daemon/daemon_test
 examples/mpic-framework/mpic-framework
+3rdparty/gflags-2.2.0/bin/
+3rdparty/gflags-2.2.0/gflags_nothreads_shared.dir/
+3rdparty/gflags-2.2.0/gflags_shared.dir/
 
 msvc/.vs/
