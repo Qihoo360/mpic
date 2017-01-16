@@ -17,7 +17,8 @@ int Master::RunMaster(const Option& op) {
     if (option_->foreground()) {
         return module_->Run();
     } else {
-        assert(false && "NOT SUPPORT");
+        return module_->Run();
+        //assert(false && "NOT SUPPORT");
     }
 
     return 0;

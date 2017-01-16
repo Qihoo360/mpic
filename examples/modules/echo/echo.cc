@@ -22,5 +22,4 @@ namespace echo {
 
 }
 
-MPIC_CREATE_MODULE(echo::EchoModule);
-MPIC_CREATE_RESOURCE(echo::EchoResource);
+EXPORT_MPIC_MODULE(echo::EchoModule, echo::EchoResource);

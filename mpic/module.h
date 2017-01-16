@@ -30,11 +30,21 @@ protected:
 
 }
 
+
+#ifdef _WIN32
+#define MPIC_EXPORT_DLL __declspec(dllexport)
+#else
+#define MPIC_EXPORT_DLL
+#endif
+
 #define MPIC_CREATE_MODULE(M) \
-    extern "C" ::mpic::Module* MPIC_NewModule() \
+    extern "C" MPIC_EXPORT_DLL void* MPIC_NewModule() \
     {return new M;}
 
 #define MPIC_CREATE_RESOURCE(R) \
-    extern "C" ::mpic::Resource* MPIC_NewResource() \
+    extern "C" MPIC_EXPORT_DLL void* MPIC_NewResource() \
     {return new R;}
 
+#define EXPORT_MPIC_MODULE(Module, Resource) \
+    MPIC_CREATE_MODULE(Module); \
+    MPIC_CREATE_RESOURCE(Resource);
