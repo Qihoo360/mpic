@@ -47,7 +47,7 @@ bool Master::InitModule() {
     std::string module_path = option_->module_file();
     if (!FileUtil::IsFileExist(module_path) ||
             !FileUtil::IsReadable(module_path)) {
-        std::cerr << "Can't find or read module file " << module_path << std::endl;
+        LOG(ERROR) << "Can't find or read module file " << module_path << std::endl;
         return false;
     }
 
