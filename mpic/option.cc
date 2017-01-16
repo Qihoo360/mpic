@@ -10,8 +10,6 @@
 #include <sstream>
 #include <iostream>
 
-#include <gflags/gflags.h>
-
 #include "platform_config.h"
 #include "option.h"
 #include "internal/file_util.h"

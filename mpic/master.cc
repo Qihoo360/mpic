@@ -69,7 +69,7 @@ bool Master::InitModule() {
     }
 
     try {
-        Resource* r = rloader();
+        Resource* r = (Resource*)rloader();
         resource_.reset(r);
         if (!r->Init(option_)) {
             LOG(ERROR) << "Resource init failed ";
@@ -93,7 +93,7 @@ bool Master::InitModule() {
         return false;
     }
     try {
-        Module* m = mloader();
+        Module* m = (Module*)mloader();
         module_.reset(m);
         m->SetResource(resource_.get());
         if (!m->Init(option_)) {

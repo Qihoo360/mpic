@@ -17,10 +17,16 @@ int Master::RunMaster(const Option& op) {
     if (option_->foreground()) {
         return module_->Run();
     } else {
-        assert(false && "NOT SUPPORT");
+        return module_->Run();
+        //assert(false && "NOT SUPPORT");
     }
 
     return 0;
+}
+
+int Master::Run() {
+    FLAGS_alsologtostderr = true;
+    return RunForeground(*option_);
 }
 #endif
 
