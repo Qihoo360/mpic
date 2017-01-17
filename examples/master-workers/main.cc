@@ -9,8 +9,8 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
-#include "mpic/master.h"
-#include "mpic/title.h"
+#include "master.h"
+#include "title.h"
 
 DEFINE_int32(http_port, 80, "The listening port of the http server");
 
