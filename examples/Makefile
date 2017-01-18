@@ -1,7 +1,7 @@
 
 include ../build.mk/astyle.mk
 
-SUBDIRS = daemon monitor-worker master-workers
+SUBDIRS = daemon monitor-worker master-workers mpic-framework modules/echo
 
 all : prepare
 	for t in $(SUBDIRS); do $(MAKE) -C $$t; done

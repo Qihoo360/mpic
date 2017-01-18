@@ -4,21 +4,21 @@
 
 namespace echo {
 
-    bool EchoModule::Init(const std::shared_ptr<mpic::Option>& op) {
-        option_ = op;
-        return true;
+bool EchoModule::Init(const std::shared_ptr<mpic::Option>& op) {
+    option_ = op;
+    return true;
+}
+
+int EchoModule::Run() {
+    LOG(INFO) << __FUNCTION__ << " running ...";
+    for (;;) {
+        LOG(INFO) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
+        google::FlushLogFiles(0);
+        sleep(1);
     }
 
-    int EchoModule::Run() {
-        LOG(INFO) << __FUNCTION__ << " running ...";
-        for (;;) {
-            LOG(INFO) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
-            google::FlushLogFiles(0);
-            sleep(1);
-        }
-
-        return 0;
-    }
+    return 0;
+}
 
 }
 

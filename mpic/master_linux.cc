@@ -176,11 +176,11 @@ void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {
         }
     }
 }
-// 
+//
 // int Master::RunMainRoutine(const Option& op) {
 //     FLAGS_stderrthreshold = 0;
 //     FLAGS_log_dir = op.log_dir();
-// 
+//
 //     if (op.foreground()) {
 //         google::InitGoogleLogging(Option::GetExeName().data());
 //     } else {
@@ -188,7 +188,7 @@ void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {
 //     }
 //     return RunMaster(op);
 // }
-// 
+//
 // int Master::RunForeground(const Option& op) {
 //     return RunMainRoutine(op);
 // }
@@ -317,10 +317,10 @@ int Master::CheckStatus(const Option& op) {
         return 1;
     }
 }
-// 
+//
 // Master::Master() : dlmodule_(NULL) {
 // }
-// 
+//
 // Master::~Master() {
 // }
 
@@ -345,7 +345,7 @@ int Master::Run() {
         return RunAsDaemon(*option_);
     }
 }
-// 
+//
 // bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {
 //     option_ = op;
 //     Title::Init(argc, argv);

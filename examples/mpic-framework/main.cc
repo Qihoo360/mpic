@@ -44,9 +44,9 @@ void sigterm(int c) {
 // Run on Windowns:
 //      $ cd msvc/bin/Debug
 //      $ ./mpic-framework.exe -config_file=mpic.conf -module_file=libechomod.dll
-// 
+//
 // Run on Linux
-//      
+//
 int main(int argc, char* argv[]) {
     signal(SIGTERM, &sigterm);
     gflags::ParseCommandLineFlags(&argc, &argv, false);
