@@ -25,5 +25,9 @@ examples/mpic-framework/mpic-framework
 3rdparty/gflags-2.2.0/bin/
 3rdparty/gflags-2.2.0/gflags_nothreads_shared.dir/
 3rdparty/gflags-2.2.0/gflags_shared.dir/
-
+3rdparty/gflags-2.2.0.bak/
+3rdparty/glog-0.3.4/vsprojects/libglog/Debug/
+3rdparty/glog-0.3.4/vsprojects/libglog_static/libglog_static_libmpic.vcxproj.user
+msvc/Debug/
+msvc/UpgradeLog.htm
 msvc/.vs/

@@ -136,6 +136,7 @@ void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
     }
     ProcessMap m;
     m.swap(running_processes_);
+    // TODO when to call module.Init
     SpawnChildWorkers(op, sigset);
     // TODO FIX : wait all children process has all initialized.
     KillAllChildren(m);
