@@ -4,7 +4,7 @@
 
 namespace echo {
 
-bool EchoModule::Init(const std::shared_ptr<mpic::Option>& op) {
+bool EchoModule::InitInMaster(const mpic::Option* op) {
     option_ = op;
     return true;
 }

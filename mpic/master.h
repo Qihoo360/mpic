@@ -61,7 +61,14 @@ private:
 
     int RunAsDaemon(const mpic::Option& option);
 
+    bool LoadModule();
     bool InitModule();
+    bool InitResource();
+
+    void UninitModule();
+    void UninitResource();
+    void UnloadModule();
+    
 
 #ifndef _WIN32
 private:
@@ -96,7 +103,7 @@ private:
     std::shared_ptr<Resource> resource_;
     std::shared_ptr<Module> module_;
     std::shared_ptr<DynLib> dlmodule_;
-
+    bool can_reload_;
 private:
     Master();
     Master(const Master& rhs) {}

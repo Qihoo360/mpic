@@ -91,7 +91,12 @@ int Master::RunMaster(const Option& op) {
     }
 
     if (option_->foreground()) {
-        return module_->Run();
+        module_->InitInWorker(option_.get());
+        int ret = module_->Run();
+        module_->Uninit();
+        module_.reset();
+        resource_.reset();
+        return ret;
     }
 
     SpawnChildWorkers(op, &sigset);
@@ -134,9 +139,17 @@ void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
         LOG(WARNING) << "The master has been already reloading, we ignore this SIGHUP reload signal";
         return;
     }
+    std::shared_ptr<Module> old_module = module_;
+    if (!InitModule()) {
+        module_ = old_module;
+        LOG(ERROR) << "InitModule failed when do the reload.";
+        return;
+    }
+    old_module->Uninit();
+    old_module.reset();
+
     ProcessMap m;
     m.swap(running_processes_);
-    // TODO when to call module.Init
     SpawnChildWorkers(op, sigset);
     // TODO FIX : wait all children process has all initialized.
     KillAllChildren(m);
@@ -177,22 +190,6 @@ void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {
         }
     }
 }
-//
-// int Master::RunMainRoutine(const Option& op) {
-//     FLAGS_stderrthreshold = 0;
-//     FLAGS_log_dir = op.log_dir();
-//
-//     if (op.foreground()) {
-//         google::InitGoogleLogging(Option::GetExeName().data());
-//     } else {
-//         google::InitGoogleLogging("master");
-//     }
-//     return RunMaster(op);
-// }
-//
-// int Master::RunForeground(const Option& op) {
-//     return RunMainRoutine(op);
-// }
 
 int Master::RunAsDaemon(const Option& op) {
     daemon_pid_file_proc = PidFileName;
@@ -318,15 +315,8 @@ int Master::CheckStatus(const Option& op) {
         return 1;
     }
 }
-//
-// Master::Master() : dlmodule_(NULL) {
-// }
-//
-// Master::~Master() {
-// }
 
 int Master::Run() {
-
     if (option_->kill()) {
         return KillDaemon(*option_);
     }
@@ -346,15 +336,5 @@ int Master::Run() {
         return RunAsDaemon(*option_);
     }
 }
-//
-// bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {
-//     option_ = op;
-//     Title::Init(argc, argv);
-//     if (!option_->Init(argc, argv)) {
-//         return false;
-//     }
-//     return true;
-// }
-
 
 }

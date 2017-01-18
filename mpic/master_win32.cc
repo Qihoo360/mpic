@@ -9,14 +9,18 @@ namespace mpic {
 int Master::RunMaster(const Option& op) {
     LOG(INFO) << "Entering " << __func__ << " ...";
 
-    if (!InitModule()) {
+    if (!LoadModule()) {
         LOG(ERROR) << "InitModule failed";
         return 1;
     }
 
+    module_->InitInWorker(option_.get());
     module_->Run();
+    
     module_->Uninit();
+    module_.reset();
 
+    resource_.reset();
     return 0;
 }
 

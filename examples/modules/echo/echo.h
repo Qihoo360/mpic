@@ -4,17 +4,17 @@
 namespace echo {
 class EchoResource : public mpic::Resource {
 public:
-    virtual bool Init(const std::shared_ptr<mpic::Option>& op) {
+    virtual bool Init(const mpic::Option* op) {
         return true;
     }
 };
 
 class EchoModule : public mpic::Module {
 public:
-    virtual bool Init(const std::shared_ptr<mpic::Option>& op);
+    virtual bool InitInMaster(const mpic::Option* op);
 
     virtual int Run();
 private:
-    std::shared_ptr<mpic::Option> option_;
+    const mpic::Option* option_;
 };
 }

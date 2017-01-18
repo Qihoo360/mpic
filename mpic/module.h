@@ -9,20 +9,24 @@ class Option;
 class Resource {
 public:
     // The resource object is created in master process
-    // and it will not be reloaded when this mpic framework reloads
-    virtual bool Init(const std::shared_ptr<Option>& op) = 0;
+    // and it will not be changed when this mpic framework reloads
+    virtual bool Init(const Option* op) = 0;
     virtual ~Resource() {}
 };
 
 class Module {
 public:
     // This will be called in master process
-    virtual bool Init(const std::shared_ptr<Option>& op) = 0;
+    // It will be reloaded immediately when this mpic framework reloads
+    virtual bool InitInMaster(const Option* op) = 0;
+
+    // This will be called in worker process
+    virtual bool InitInWorker(const Option* op) { return true; }
 
     // This will be called in master process
     virtual void Uninit() {}
 
-    virtual int Run() = 0; // run in worker process
+    virtual int Run() = 0; // Run in worker process
 
     virtual ~Module() {}
 
