@@ -16,9 +16,14 @@ public:
 
 class Module {
 public:
+    // This will be called in master process
     virtual bool Init(const std::shared_ptr<Option>& op) = 0;
+    
+    // This will be called in master process
     virtual void Uninit() {}
+
     virtual int Run() = 0; // run in worker process
+    
     virtual ~Module() {}
 
     void SetResource(Resource* r) {

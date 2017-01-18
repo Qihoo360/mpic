@@ -32,6 +32,9 @@ Master::Master() : dlmodule_(NULL) {
 }
 
 Master::~Master() {
+    module_.reset();
+    resource_.reset();
+    dlmodule_->Unload();
 }
 
 bool Master::Init(int argc, char** argv, std::shared_ptr<Option> op) {

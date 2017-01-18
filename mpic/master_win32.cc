@@ -14,12 +14,8 @@ int Master::RunMaster(const Option& op) {
         return 1;
     }
 
-    if (option_->foreground()) {
-        return module_->Run();
-    } else {
-        return module_->Run();
-        //assert(false && "NOT SUPPORT");
-    }
+    module_->Run();
+    module_->Uninit();
 
     return 0;
 }
