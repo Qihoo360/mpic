@@ -16,7 +16,7 @@ int Master::RunMaster(const Option& op) {
 
     module_->InitInWorker(option_.get());
     module_->Run();
-    
+
     module_->Uninit();
     module_.reset();
 

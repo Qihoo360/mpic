@@ -68,7 +68,7 @@ private:
     void UninitModule();
     void UninitResource();
     void UnloadModule();
-    
+
 
 #ifndef _WIN32
 private:

@@ -76,17 +76,8 @@ int Master::RunMaster(const Option& op) {
     std::string title_prefix = Option::GetExeName() + "(" + op.name() + "): master process";
     Title::Set(title_prefix + origin_title);
 
-    sigset_t sigset;
-    sigemptyset(&sigset);
-    sigaddset(&sigset, SIGCHLD);
-    sigaddset(&sigset, SIGTERM);
-    sigaddset(&sigset, SIGHUP);
-    sigaddset(&sigset, SIGINT);
-    sigprocmask(SIG_BLOCK, &sigset, NULL);
-    signal(SIGCHLD, sigchld);
-
-    if (!InitModule()) {
-        LOG(ERROR) << "InitModule failed";
+    if (!LoadModule()) {
+        LOG(ERROR) << "LoadModule failed";
         return 1;
     }
 
@@ -98,6 +89,15 @@ int Master::RunMaster(const Option& op) {
         resource_.reset();
         return ret;
     }
+
+    sigset_t sigset;
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGCHLD);
+    sigaddset(&sigset, SIGTERM);
+    sigaddset(&sigset, SIGHUP);
+    sigaddset(&sigset, SIGINT);
+    sigprocmask(SIG_BLOCK, &sigset, NULL);
+    signal(SIGCHLD, sigchld);
 
     SpawnChildWorkers(op, &sigset);
 

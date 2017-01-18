@@ -13,23 +13,26 @@
 *.la
 *.a
 
-3rdparty/gflags-2.2.0/.vs/
-
 msvc/bin/
 msvc/libmpic.VC.VC.opendb
 msvc/libmpic.VC.db
+msvc/Debug/
+msvc/UpgradeLog.htm
+msvc/.vs/
 
 libmpic.so.*
+
 examples/daemon/daemon_test
 examples/mpic-framework/mpic-framework
 examples/master-workers/master_workers_test
 examples/monitor-worker/monitor_worker_test
+
+3rdparty/gflags-2.2.0/.vs/
 3rdparty/gflags-2.2.0/bin/
 3rdparty/gflags-2.2.0/gflags_nothreads_shared.dir/
 3rdparty/gflags-2.2.0/gflags_shared.dir/
 3rdparty/gflags-2.2.0.bak/
 3rdparty/glog-0.3.4/vsprojects/libglog/Debug/
 3rdparty/glog-0.3.4/vsprojects/libglog_static/libglog_static_libmpic.vcxproj.user
-msvc/Debug/
-msvc/UpgradeLog.htm
-msvc/.vs/
+
+test/mpic-test

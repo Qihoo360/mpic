@@ -21,7 +21,9 @@ public:
     virtual bool InitInMaster(const Option* op) = 0;
 
     // This will be called in worker process
-    virtual bool InitInWorker(const Option* op) { return true; }
+    virtual bool InitInWorker(const Option* op) {
+        return true;
+    }
 
     // This will be called in master process
     virtual void Uninit() {}
