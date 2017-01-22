@@ -4,7 +4,7 @@ include ../build.mk/astyle.mk
 SUBDIRS = nfmpic modules/echo
 
 all : prepare
-	for t in $(SUBDIRS); do $(MAKE) -C $$t; done
+	for t in $(SUBDIRS); do cd $$t && $(MAKE) && cd - ; done
 
 clean:
 	for t in $(SUBDIRS); do $(MAKE) clean -C $$t; done

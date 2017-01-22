@@ -3,26 +3,20 @@ CXX := g++
 
 CURRENT_DIR=$(shell echo `pwd`)
 MPIC_DIR=$(CURRENT_DIR)/../..
-EVPP_PATH := $(PWD)/../../../evpp
 
 CPPFLAGS= -g -c -fPIC \
 		  -D_DEBUG \
 		  -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings \
 		  -Wsign-compare -Winvalid-pch -fms-extensions -Wall \
 		  -MMD -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11\
-		  -I $(MPIC_DIR)\
-		  -I $(EVPP_DIR)\
-		  -I $(MPIC_DIR)/3rdparty/libdaemon \
+		  -I $(MPIC_DIR)
 
-RTFLAGS := \
-    -Wl,-rpath=. \
-    -Wl,-rpath=$(MPIC_DIR)/mpic \
-    -Wl,-rpath=$(EVPP_PATH)/evpp \
+RTFLAGS := -Wl,-rpath=. \
+		   -Wl,-rpath=$(MPIC_DIR)/mpic \
 
 LDFLAGS= $(RTFLAGS) \
 		 -L$(MPIC_DIR)/mpic \
-		 -L$(EVPP_PATH)/evpp \
-		 -lmpic -lglog -lgflags -levpp
+		 -lmpic -lglog -lgflags 
 
 SRCS := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRCS))
