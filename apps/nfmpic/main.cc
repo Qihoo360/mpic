@@ -48,6 +48,7 @@ struct OnStartup {
 //      $ ./nfmpic.exe -config_file=mpic.conf -module_file=libnfmpic-module-echo.dll
 //
 // Run on Linux
+//      $ ./nfmpic -module_file=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -foreground
 //
 int main(int argc, char* argv[]) {
     gflags::ParseCommandLineFlags(&argc, &argv, false);
