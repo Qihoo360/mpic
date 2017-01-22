@@ -1,5 +1,5 @@
 
-SUBDIRS = mpic test examples 
+SUBDIRS = mpic test examples apps
 
 all : 
 	for t in $(SUBDIRS); do $(MAKE) -C $$t; done

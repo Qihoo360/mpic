@@ -24,7 +24,7 @@ bool Resource::Init(const mpic::Option* mpic_option) {
         rc = http_server_->Init(op->http_ports());
         if (!rc) {
             LOG(ERROR) << "HTTP server start failed : "
-                << "http_ports=" << op->http_ports();
+                       << "http_ports=" << op->http_ports();
             return false;
         }
     }
@@ -39,7 +39,7 @@ bool Resource::Init(const mpic::Option* mpic_option) {
         rc = tcp_server_->Init();
         if (!rc) {
             LOG(ERROR) << "TCP server start failed : "
-                << "tcp_port=" << op->tcp_port();
+                       << "tcp_port=" << op->tcp_port();
             return false;
         }
     }
@@ -50,7 +50,7 @@ bool Resource::Init(const mpic::Option* mpic_option) {
         rc = udp_server_->Init(op->udp_ports());
         if (!rc) {
             LOG(ERROR) << "UDP server start failed : "
-                << "udp_ports=" << op->udp_ports();
+                       << "udp_ports=" << op->udp_ports();
             return false;
         }
     }
@@ -65,12 +65,12 @@ void Resource::AfterFork() {
 
 void Resource::RunServers() {
     bool rc = true;
-    
+
     rc = tcp_server_->StartWithPreInited();
     if (!rc) {
         LOG(FATAL) << "TCPServer start failed\n";
     }
-    
+
     rc = http_server_->StartWithPreInited();
     if (!rc) {
         LOG(FATAL) << "HTTPServer start failed\n";
@@ -99,12 +99,12 @@ void Resource::StopServers() {
     if (base_loop_) {
         base_loop_->Stop(false);
     }
-    
+
     if (tcp_server_) {
         tcp_server_->Stop();
     }
 
-    for (;;sleep(1)) {
+    for (;; sleep(1)) {
         if (base_loop_ && !base_loop_->IsStopped()) {
             LOG(INFO) << "Base EventLoop is stopping now, please wait ...";
             continue;

@@ -7,6 +7,7 @@ ARFLAGS=cru
 
 PWD := $(shell pwd)
 MPIC_PATH := $(PWD)/../../..
+EVPP_PATH := $(PWD)/../../../../evpp
 
 DEBUG := -D_DEBUG
 
@@ -14,14 +15,17 @@ CFLAGS=$(TOP_CFLAGS) -g -c -fPIC $(DEBUG) \
 	   -Wall -Wno-unused-parameter -Wno-unused-function -Wunused-variable -Wunused-value \
 	   -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings -Wsign-compare \
 	   -Winvalid-pch -fms-extensions -Wfloat-equal -Wextra \
-	   -I . -I $(MPIC_PATH) -MMD
+	   -I . -I $(MPIC_PATH) -I $(EVPP_PATH) -MMD
 CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11
 
 RTFLAGS := \
     -Wl,-rpath=. \
     -Wl,-rpath=$(MPIC_PATH)/mpic \
+    -Wl,-rpath=$(EVPP_PATH)/evpp \
 
-LDFLAGS= $(RTFLAGS) -lglog -lpthread -lmpic -L$(MPIC_PATH)/mpic \
+LDFLAGS= $(RTFLAGS) -lglog -lpthread -lmpic -levpp \
+		 -L$(MPIC_PATH)/mpic \
+		 -L$(EVPP_PATH)/evpp \
 
 SRCS := $(wildcard *.cc) 
 OBJS := $(patsubst %, %.o, $(SRCS))

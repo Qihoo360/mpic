@@ -27,6 +27,8 @@ examples/mpic-framework/mpic-framework
 examples/master-workers/master_workers_test
 examples/monitor-worker/monitor_worker_test
 
+apps/nfmpic/nfmpic
+
 3rdparty/gflags-2.2.0/.vs/
 3rdparty/gflags-2.2.0/bin/
 3rdparty/gflags-2.2.0/gflags_nothreads_shared.dir/

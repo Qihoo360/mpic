@@ -15,7 +15,7 @@
 
 namespace nfmpic {
 
-std::atomic<bool> running = true;
+std::atomic<bool> running(true);
 
 void sigterm(int c) {
     std::string title_prefix = mpic::Option::GetExeName() + "(" + mpic::Master::instance().option()->name() + "): worker process is shutting down ...";
