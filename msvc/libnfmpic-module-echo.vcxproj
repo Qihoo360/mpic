@@ -67,7 +67,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);H_WINDOWS_API;GLUEASYNC_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../3rdparty/gflags-2.2.0/include/;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,7 +86,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);H_WINDOWS_API;GLUEASYNC_EXPORTS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../../evpp/3rdparty/libevent-2.1.5-beta/include;../../evpp/3rdparty/glog-0.3.4/src/windows;../../evpp;../3rdparty/gflags-2.2.0/include/;../../simcc;../../cloudcom/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -4,44 +4,16 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "nfmpic_option.h"
-
 #include "mpic/exp.h"
 #include "mpic/master.h"
 
-#ifdef H_OS_WINDOWS
-#pragma comment(lib,"libmpic.lib")
-#pragma comment(lib,"Ws2_32.lib")
-#endif
+#include "main-inl.h"
 
-#ifndef H_OS_WINDOWS
-#include <signal.h>
-#endif
-
-namespace {
-struct OnStartup {
-    OnStartup() {
-#ifdef H_OS_WINDOWS
-        // Initialize net work.
-        WSADATA wsaData;
-        // Initialize Winsock 2.2
-        int err = WSAStartup(MAKEWORD(2, 2), &wsaData);
-
-        if (err) {
-            std::cout << "WSAStartup() failed with error: %d" << err;
-        }
-#else
-        if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
-            LOG(ERROR) << "SIGPIPE set failed.";
-            exit(-1);
-        }
-        LOG(INFO) << "ignore SIGPIPE";
-#endif
-    }
-    ~OnStartup() {}
-} __s_onstartup;
-}
-
+// DEFINE_string(http_port, "8080,8090", "The listening ports of the http server. We can give more than 1 port using comma to separate them.");
+// DEFINE_int32(tcp_port, 8081, "The listening port of the tcp server.");
+// DEFINE_string(udp_port, "5353", "The listening ports of the udp server. We can give more than 1 port using comma to separate them.");
+// DEFINE_int32(tcp_thread_pool_size, 12, "The thread number in the tcp server's working thread pool");
+// DEFINE_int32(http_thread_pool_size, 12, "The thread number in the http server's working thread pool");
 
 // Run on Windowns:
 //      $ cd msvc/bin/Debug
@@ -52,7 +24,7 @@ struct OnStartup {
 //
 int main(int argc, char* argv[]) {
     gflags::ParseCommandLineFlags(&argc, &argv, false);
-    std::shared_ptr<mpic::Option> op(new nfmpic::Option);
+    std::shared_ptr<mpic::Option> op(new mpic::Option);
     mpic::Master& pm = mpic::Master::instance();
     if (pm.Init(argc, argv, op)) {
         return pm.Run();

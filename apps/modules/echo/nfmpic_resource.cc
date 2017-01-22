@@ -5,15 +5,15 @@
 #include <evpp/udp/udp_server.h>
 
 #include "nfmpic_resource.h"
-#include "apps/nfmpic/nfmpic_option.h"
+
+#include <mpic/option.h>
 
 namespace nfmpic {
 
 Resource::Resource() {
 }
 
-bool Resource::Init(const mpic::Option* mpic_option) {
-    const Option* op = dynamic_cast<const Option*>(mpic_option);
+bool Resource::Init(const mpic::Option* op) {
     bool rc = true;
 
     base_loop_ = std::make_shared<evpp::EventLoopThread>();

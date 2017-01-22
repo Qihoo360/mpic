@@ -12,10 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\apps\nfmpic\main.cc" />
-    <ClCompile Include="..\apps\nfmpic\nfmpic_option.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\apps\nfmpic\nfmpic_option.h" />
+    <ClInclude Include="..\apps\nfmpic\main-inl.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{79FFA6B1-09A0-426A-A6E0-89FB0DC83E13}</ProjectGuid>

@@ -24,6 +24,13 @@ DEFINE_bool(reload, false, "Reload the process");
 DEFINE_bool(foreground, false, "Run the process in foreground mode, default is in daemon mode");
 DEFINE_bool(debug, false, "Run the process in debug mode");
 DEFINE_bool(status, false, "Show the status of the process");
+
+DEFINE_string(http_port, "8081,8082", "The listening ports of the http server. We can give more than 1 port using comma to separate them.");
+DEFINE_int32(tcp_port, 8091, "The listening port of the tcp server.");
+DEFINE_string(udp_port, "15353", "The listening ports of the udp server. We can give more than 1 port using comma to separate them.");
+DEFINE_int32(tcp_thread_pool_size, 12, "The thread number in the tcp server's working thread pool");
+DEFINE_int32(http_thread_pool_size, 12, "The thread number in the http server's working thread pool");
+
 DECLARE_string(log_dir);
 
 namespace mpic {
@@ -31,7 +38,10 @@ namespace mpic {
 static const char* kDefaultLogDir = "/tmp";
 
 Option::Option()
-    : initialized_(false)
+    : tcp_port_(0)
+    , tcp_thread_pool_size_(1)
+    , http_thread_pool_size_(1)
+    , initialized_(false)
     , kill_(false)
     , reload_(false)
     , status_(false)
@@ -94,6 +104,12 @@ bool Option::Init(int argc, char** argv) {
         std::cerr << "Can't find or read config file " << cfg_file_ << std::endl;
         return false;
     }
+
+    http_ports_ = FLAGS_http_port;
+    tcp_port_ = FLAGS_tcp_port;
+    udp_ports_ = FLAGS_udp_port;
+    tcp_thread_pool_size_ = FLAGS_tcp_thread_pool_size;
+    http_thread_pool_size_ = FLAGS_http_thread_pool_size;
 
     initialized_ = true;
 

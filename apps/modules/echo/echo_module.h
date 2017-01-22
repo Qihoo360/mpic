@@ -14,7 +14,17 @@ public:
         return static_cast<nfmpic::Resource*>(resource_);
     }
 
-    void RequestHandler(evpp::EventLoop* loop, const evpp::http::ContextPtr& ctx, const evpp::http::HTTPSendResponseCallback& cb);
+    void HTTPRequestHandler(evpp::EventLoop* loop,
+                            const evpp::http::ContextPtr& ctx,
+                            const evpp::http::HTTPSendResponseCallback& cb);
 
+    void UDPRequestHandler(evpp::EventLoop* loop,
+                           evpp::udp::MessagePtr& msg);
+
+    void OnTCPMessage(const evpp::TCPConnPtr& conn,
+                   evpp::Buffer* msg,
+                   evpp::Timestamp ts);
+
+    void OnTCPConnection(const evpp::TCPConnPtr& conn);
 };
 }
