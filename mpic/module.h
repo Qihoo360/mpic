@@ -35,6 +35,7 @@ public:
     void SetResource(Resource* r) {
         resource_ = r;
     }
+
 protected:
     Resource* resource_;
 };
