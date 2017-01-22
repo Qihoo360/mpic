@@ -31,6 +31,7 @@ bool EchoModule::InitInMaster(const mpic::Option* op) {
 bool EchoModule::InitInWorker(const mpic::Option* op) {
     signal(SIGTERM, &sigterm);
     Resource* r = GetResource();
+    r->http_server()->RegisterHandler("/echo", std::bind(&EchoModule::RequestHandler, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     r->AfterFork();
     r->RunServers();
     return true;
@@ -47,6 +48,16 @@ int EchoModule::Run() {
     GetResource()->StopServers();
     LOG(WARNING) << "pid=" << getpid() << " exited.";
     return 0;
+}
+
+
+void EchoModule::RequestHandler(evpp::EventLoop* loop, const evpp::http::ContextPtr& ctx, const evpp::http::HTTPSendResponseCallback& cb) {
+    std::stringstream oss;
+    oss << "func=" << __FUNCTION__ << " OK"
+        << " ip=" << ctx->remote_ip << "\n"
+        << " uri=" << ctx->uri << "\n"
+        << " body=" << ctx->body.ToString() << "\n";
+    cb(oss.str());
 }
 
 }

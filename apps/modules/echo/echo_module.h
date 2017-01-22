@@ -14,5 +14,7 @@ public:
         return static_cast<nfmpic::Resource*>(resource_);
     }
 
+    void RequestHandler(evpp::EventLoop* loop, const evpp::http::ContextPtr& ctx, const evpp::http::HTTPSendResponseCallback& cb);
+
 };
 }
