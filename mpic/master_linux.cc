@@ -47,7 +47,11 @@ pid_t Master::SpawnChildWorker(const Option& op, sigset_t* sigset) {
             Title::Set(title_prefix);
         }
 
+        module_->InitInWorker(option_.get());
         int ret = module_->Run();
+        module_->Uninit();
+        module_.reset();
+        resource_.reset();
         LOG(WARNING) << "child worker process (" << getpid() << ") exited with code " << ret;
         google::ShutdownGoogleLogging();
         exit(ret);

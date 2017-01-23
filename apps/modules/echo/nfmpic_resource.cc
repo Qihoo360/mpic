@@ -105,6 +105,7 @@ void Resource::StopServers() {
     }
 
     for (;; sleep(1)) {
+        google::FlushLogFiles(0);
         if (base_loop_ && !base_loop_->IsStopped()) {
             LOG(INFO) << "Base EventLoop is stopping now, please wait ...";
             continue;
@@ -124,6 +125,8 @@ void Resource::StopServers() {
             LOG(INFO) << "http_server is stopping now, please wait ...";
             continue;
         }
+
+        break;
     }
 
     LOG(WARNING) << "All server is stopped.";

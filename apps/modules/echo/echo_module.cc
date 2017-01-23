@@ -38,24 +38,28 @@ bool EchoModule::InitInWorker(const mpic::Option* op) {
     signal(SIGTERM, &sigterm);
     Resource* r = GetResource();
 
+    r->AfterFork();
     r->http_server()->RegisterHandler("/echo", std::bind(&EchoModule::HTTPRequestHandler, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     r->udp_server()->SetMessageHandler(std::bind(&EchoModule::UDPRequestHandler, this, std::placeholders::_1, std::placeholders::_2));
     r->tcp_server()->SetConnectionCallback(std::bind(&EchoModule::OnTCPConnection, this, std::placeholders::_1));
     r->tcp_server()->SetMessageCallback(std::bind(&EchoModule::OnTCPMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
-    r->AfterFork();
     r->RunServers();
     return true;
 }
 
 int EchoModule::Run() {
     LOG(INFO) << __FUNCTION__ << " running ...";
+    google::FlushLogFiles(0);
+
     while (running) {
-        google::FlushLogFiles(0);
-        usleep(1);
+        usleep(300*1000);
     }
 
     assert(!running);
+
+    LOG(INFO) << __FUNCTION__ << " stopping ...";
+    google::FlushLogFiles(0);
     GetResource()->StopServers();
     LOG(WARNING) << "pid=" << getpid() << " exited.";
     return 0;
