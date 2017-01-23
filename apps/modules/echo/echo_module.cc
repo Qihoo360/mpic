@@ -26,7 +26,7 @@ std::atomic<bool> running(true);
 void sigterm(int c) {
     std::string title_prefix = mpic::Option::GetExeName() + "(" + mpic::Master::instance().option()->name() + "): worker process is shutting down ...";
     mpic::Title::Set(title_prefix);
-    running = false;
+    running.store(false);
 }
 
 
@@ -52,11 +52,11 @@ int EchoModule::Run() {
     LOG(INFO) << __FUNCTION__ << " running ...";
     google::FlushLogFiles(0);
 
-    while (running) {
+    while (running.load()) {
         usleep(300*1000);
     }
 
-    assert(!running);
+    assert(!running.load());
 
     LOG(INFO) << __FUNCTION__ << " stopping ...";
     google::FlushLogFiles(0);

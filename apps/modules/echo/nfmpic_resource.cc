@@ -66,17 +66,17 @@ void Resource::AfterFork() {
 void Resource::RunServers() {
     bool rc = true;
 
-    rc = tcp_server_->StartWithPreInited();
+    rc = tcp_server_->Start();
     if (!rc) {
         LOG(FATAL) << "TCPServer start failed\n";
     }
 
-    rc = http_server_->StartWithPreInited();
+    rc = http_server_->Start();
     if (!rc) {
         LOG(FATAL) << "HTTPServer start failed\n";
     }
 
-    rc = udp_server_->StartWithPreInited();
+    rc = udp_server_->Start();
     if (!rc) {
         LOG(FATAL) << "UDPServer start failed\n";
     }
@@ -88,6 +88,23 @@ void Resource::RunServers() {
 }
 
 void Resource::StopServers() {
+    // Stop listen and do not receive new request
+    if (udp_server_) {
+        udp_server_->Pause();
+    }
+
+    if (http_server_) {
+        http_server_->Pause();
+    }
+
+    if (base_loop_) {
+        base_loop_->Stop(false);
+    }
+
+    // sleep 1 seconds to wait the last requests done.
+    sleep(1);
+
+    // Stop servers
     if (udp_server_) {
         udp_server_->Stop(false);
     }
