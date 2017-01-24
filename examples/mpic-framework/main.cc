@@ -14,25 +14,6 @@
 #pragma comment(lib,"libmpic.lib")
 #endif
 
-DEFINE_int32(http_port, 80, "The listening port of the http server");
-
-class HttpOption : public mpic::Option {
-public:
-    HttpOption() {}
-    virtual bool Init(int argc, char** argv) {
-        http_port_ = FLAGS_http_port;
-        return mpic::Option::Init(argc, argv);
-    }
-
-    int http_port() const {
-        return http_port_;
-    }
-
-private:
-    int http_port_;
-};
-
-
 void sigterm(int c) {
     std::string title_prefix = mpic::Option::GetExeName() + "(" + mpic::Master::instance().option()->name() + "): worker process is shutting down ...";
     mpic::Title::Set(title_prefix);
@@ -50,7 +31,7 @@ void sigterm(int c) {
 int main(int argc, char* argv[]) {
     signal(SIGTERM, &sigterm);
     gflags::ParseCommandLineFlags(&argc, &argv, false);
-    std::shared_ptr<mpic::Option> op(new HttpOption);
+    std::shared_ptr<mpic::Option> op(new mpic::Option);
     mpic::Master& pm = mpic::Master::instance();
     if (pm.Init(argc, argv, op)) {
         return pm.Run();
