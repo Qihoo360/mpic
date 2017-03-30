@@ -6,15 +6,17 @@
 
 #include "nfmpic_resource.h"
 
-#include <mpic/option.h>
+#include "../../nfmpic/option.h"
 
 namespace nfmpic {
 
 Resource::Resource() {
 }
 
-bool Resource::Init(const mpic::Option* op) {
+bool Resource::Init(const mpic::Option* mpic_op) {
     bool rc = true;
+    const nfmpic::Option* op = dynamic_cast<const nfmpic::Option*>(mpic_op);
+    assert(op);
 
     base_loop_ = std::make_shared<evpp::EventLoopThread>();
 

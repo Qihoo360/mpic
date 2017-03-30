@@ -7,7 +7,18 @@
 #include "mpic/exp.h"
 #include "mpic/master.h"
 
+#include "option.h"
+
 #include "main-inl.h"
+
+#ifdef H_OS_WINDOWS
+H_LINK_LIB("libglog_static")
+H_LINK_LIB("Ws2_32")
+#endif
+
+#ifdef H_OS_WINDOWS
+#pragma comment(lib,"libmpic.lib")
+#endif
 
 // DEFINE_string(http_port, "8080,8090", "The listening ports of the http server. We can give more than 1 port using comma to separate them.");
 // DEFINE_int32(tcp_port, 8081, "The listening port of the tcp server.");
@@ -17,14 +28,13 @@
 
 // Run on Windowns:
 //      $ cd msvc/bin/Debug
-//      $ ./nfmpic.exe -config_file=mpic.conf -module_file=libnfmpic-module-echo.dll
+//      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll
 //
 // Run on Linux
-//      $ ./nfmpic -module_file=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -foreground
+//      $ ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
 //
 int main(int argc, char* argv[]) {
-    gflags::ParseCommandLineFlags(&argc, &argv, false);
-    std::shared_ptr<mpic::Option> op(new mpic::Option);
+    std::shared_ptr<mpic::Option> op(new nfmpic::Option);
     mpic::Master& pm = mpic::Master::instance();
     if (pm.Init(argc, argv, op)) {
         return pm.Run();

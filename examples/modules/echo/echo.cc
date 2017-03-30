@@ -2,6 +2,7 @@
 
 #include "mpic/option.h"
 
+
 namespace echo {
 
 bool EchoModule::InitInMaster(const mpic::Option* op) {

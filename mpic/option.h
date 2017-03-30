@@ -4,7 +4,17 @@
 
 #include "internal/inner_pre.h"
 
+
+namespace boost {
+namespace program_options {
+class variables_map;
+class options_description;
+}
+}
+
 namespace mpic {
+
+namespace po = boost::program_options;
 
 class MPIC_EXPORT Option {
 public:
@@ -56,33 +66,46 @@ public:
     static const std::string& GetExeName();
 
 public:
-    const std::string& http_ports() const {
-        return http_ports_;
-    }
 
-    int tcp_port() const {
-        return tcp_port_;
-    }
+    const po::variables_map*
+        vm() const { return vm_.get(); }
 
-    const std::string& udp_ports() const {
-        return udp_ports_;
-    }
+    const po::options_description*
+        cmdline_options() const { return cmdline_options_.get(); }
 
-    int tcp_thread_pool_size() const {
-        return tcp_thread_pool_size_;
-    }
+    void AddOption(const po::options_description& op);
 
-    int http_thread_pool_size() const {
-        return http_thread_pool_size_;
-    }
+public:
+//     const std::string& http_ports() const {
+//         return http_ports_;
+//     }
+// 
+//     int tcp_port() const {
+//         return tcp_port_;
+//     }
+// 
+//     const std::string& udp_ports() const {
+//         return udp_ports_;
+//     }
+// 
+//     int tcp_thread_pool_size() const {
+//         return tcp_thread_pool_size_;
+//     }
+// 
+//     int http_thread_pool_size() const {
+//         return http_thread_pool_size_;
+//     }
 private:
-    std::string http_ports_;
-    std::string udp_ports_;
-    int tcp_port_;
-    int tcp_thread_pool_size_;
-    int http_thread_pool_size_;
+//     std::string http_ports_;
+//     std::string udp_ports_;
+//     int tcp_port_;
+//     int tcp_thread_pool_size_;
+//     int http_thread_pool_size_;
 
 private:
+    std::shared_ptr<po::variables_map> vm_;
+    std::shared_ptr<po::options_description> cmdline_options_;
+
     std::string original_cmdline_;
     bool initialized_;
 

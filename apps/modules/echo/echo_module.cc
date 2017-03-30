@@ -16,7 +16,6 @@
 
 #ifdef H_OS_WINDOWS
 #pragma comment(lib,"libmpic.lib")
-#pragma comment(lib,"gflags.lib")
 #endif
 
 namespace nfmpic {
@@ -42,7 +41,7 @@ bool EchoModule::InitInWorker(const mpic::Option* op) {
     r->http_server()->RegisterHandler("/echo", std::bind(&EchoModule::HTTPRequestHandler, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     r->udp_server()->SetMessageHandler(std::bind(&EchoModule::UDPRequestHandler, this, std::placeholders::_1, std::placeholders::_2));
     r->tcp_server()->SetConnectionCallback(std::bind(&EchoModule::OnTCPConnection, this, std::placeholders::_1));
-    r->tcp_server()->SetMessageCallback(std::bind(&EchoModule::OnTCPMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    r->tcp_server()->SetMessageCallback(std::bind(&EchoModule::OnTCPMessage, this, std::placeholders::_1, std::placeholders::_2));
 
     r->RunServers();
     return true;
@@ -69,9 +68,9 @@ int EchoModule::Run() {
 void EchoModule::HTTPRequestHandler(evpp::EventLoop* loop, const evpp::http::ContextPtr& ctx, const evpp::http::HTTPSendResponseCallback& cb) {
     std::stringstream oss;
     oss << "func=" << __FUNCTION__ << " OK"
-        << " ip=" << ctx->remote_ip << "\n"
-        << " uri=" << ctx->uri << "\n"
-        << " body=" << ctx->body.ToString() << "\n";
+        << " ip=" << ctx->remote_ip() << "\n"
+        << " uri=" << ctx->uri() << "\n"
+        << " body=" << ctx->body().ToString() << "\n";
     cb(oss.str());
 }
 
@@ -84,7 +83,7 @@ void EchoModule::UDPRequestHandler(evpp::EventLoop* loop, evpp::udp::MessagePtr&
 }
 
 
-void EchoModule::OnTCPMessage(const evpp::TCPConnPtr& conn, evpp::Buffer* msg, evpp::Timestamp ts) {
+void EchoModule::OnTCPMessage(const evpp::TCPConnPtr& conn, evpp::Buffer* msg) {
     std::string s = msg->NextAllString();
     LOG_INFO << "Received a message [" << s << "]";
     conn->Send(s);

@@ -94,7 +94,6 @@
     <ClCompile Include="..\test\any_test.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\test\glog_test.cc" />
     <ClCompile Include="..\test\winmain.cc" />
   </ItemGroup>
   <ItemGroup>

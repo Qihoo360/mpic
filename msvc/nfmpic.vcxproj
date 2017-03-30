@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\apps\nfmpic\main-inl.h" />
+    <ClInclude Include="..\apps\nfmpic\option.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{79FFA6B1-09A0-426A-A6E0-89FB0DC83E13}</ProjectGuid>
@@ -64,12 +65,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/;d:/cppworkspace/boost_1_58_0/output/include/boost-1_58</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;d:/cppworkspace/boost_1_58_0/output/lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,14 +83,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;../3rdparty/wininclude;../3rdparty/glog-0.3.4/src/windows;../3rdparty/gflags-2.2.0/include/;../3rdparty/glog-0.3.4/src/;d:/cppworkspace/boost_1_58_0/output/include/boost-1_58</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);../3rdparty/gflags-2.2.0/lib/$(Configuration)/;d:/cppworkspace/boost_1_58_0/output/lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

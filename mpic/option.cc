@@ -14,34 +14,16 @@
 #include "option.h"
 #include "internal/file_util.h"
 
-DEFINE_string(config_file, "/tmp/mpic.conf", "The config file path for the submodule");
-DEFINE_string(pid_file, "/tmp/mpic.pid", "The pid file path of the process");
-DEFINE_string(name, "", "The name of the submodule");
-DEFINE_string(module_file, "/tmp/mpic.so", "The file path of the submodule");
-DEFINE_int32(worker_processes, 1, "The count of worker processes");
-DEFINE_bool(kill, false, "Kill the process");
-DEFINE_bool(reload, false, "Reload the process");
-DEFINE_bool(foreground, false, "Run the process in foreground mode, default is in daemon mode");
-DEFINE_bool(debug, false, "Run the process in debug mode");
-DEFINE_bool(status, false, "Show the status of the process");
-
-DEFINE_string(http_port, "8081,8082", "The listening ports of the http server. We can give more than 1 port using comma to separate them.");
-DEFINE_int32(tcp_port, 8091, "The listening port of the tcp server.");
-DEFINE_string(udp_port, "15353", "The listening ports of the udp server. We can give more than 1 port using comma to separate them.");
-DEFINE_int32(tcp_thread_pool_size, 12, "The thread number in the tcp server's working thread pool");
-DEFINE_int32(http_thread_pool_size, 12, "The thread number in the http server's working thread pool");
-
-DECLARE_string(log_dir);
+#include <boost/program_options.hpp>
 
 namespace mpic {
 
-static const char* kDefaultLogDir = "/tmp";
-
 Option::Option()
-    : tcp_port_(0)
-    , tcp_thread_pool_size_(1)
-    , http_thread_pool_size_(1)
-    , initialized_(false)
+    : 
+//     tcp_port_(0)
+//     , tcp_thread_pool_size_(1)
+//     , http_thread_pool_size_(1)
+    initialized_(false)
     , kill_(false)
     , reload_(false)
     , status_(false)
@@ -49,6 +31,8 @@ Option::Option()
     , foreground_(false)
     , debug_(false)
     , worker_processes_(1) {
+    vm_.reset(new po::variables_map);
+    cmdline_options_.reset(new po::options_description);
 }
 
 Option::~Option() {}
@@ -64,25 +48,114 @@ bool Option::Init(int argc, char** argv) {
     }
     original_cmdline_ = title.str();
 
-    if (FLAGS_log_dir.empty()) {
-        FLAGS_log_dir = kDefaultLogDir;
-    }
+    std::string tmp_log_dir;
+    std::string tmp_pid;
+    std::string tmp_cfg;
+    std::string tmp_mod;
 
-    this->kill_ = FLAGS_kill;
-    this->reload_ = FLAGS_reload;
-    this->foreground_ = FLAGS_foreground;
-    this->status_ = FLAGS_status;
-    this->worker_processes_ = FLAGS_worker_processes;
-    this->cfg_file_ = FLAGS_config_file;
-    this->pid_file_ = FLAGS_pid_file;
-    this->module_file_ = FLAGS_module_file;
-    this->name_ = FLAGS_name;
-    this->log_dir_ = FLAGS_log_dir;
+    std::string name_opt_desc = Option::GetExeName() + " config file name [REQUIRED]";
+    po::options_description generic("Generic options");
+    generic.add_options()
+        ("name,n", po::value<std::string>(&name_), name_opt_desc.data())
+        ("help,h", "show this message")
+        ("worker_processes,p", po::value<int>(&worker_processes_), "the number of worker processes")
+        ("kill,k", "kill the running process")
+        ("reload,r", "reload the running process")
+        ("status,s", "check mpic process status")
+        ("newbin,R", "run new binary")
+        ("foreground,f", "run in foreground")
+        ("debug,d", "run worker process only")
+        ("log_dir",
+         po::value<std::string>(&tmp_log_dir)->default_value("/tmp"),
+         "log file directory")
+        ("pid",
+         po::value<std::string>(&tmp_pid)->default_value("/tmp/mpic.pid"),
+         "pid file name with full path")
+        ("cfg",
+         po::value<std::string>(&tmp_cfg)->default_value("/tmp/mpic.conf"),
+         "config file name with full path")
+        ("mod",
+         po::value<std::string>(&tmp_mod)->default_value("/tmp/echo.so"),
+         "the application module file name with full path");
+
+    cmdline_options_->add(generic);
+
+    try {
+        po::store(po::parse_command_line(argc, argv, *cmdline_options_), *vm_);
+    } catch (const std::exception& e) {
+        std::cerr << __FILE__ << ":" << __LINE__ << " Error parsing args: " << e.what() << std::endl;
+        return false;
+    }
+    po::notify(*vm_);
+
+    if (vm_->count("help")) {
+        std::cout << "Usage: " << argv[0];
+        std::cout << " -n <name> [-k|-r|-s|-f|-d|-R] [options...]";
+        std::cout << std::endl << *cmdline_options_ << std::endl;
+        return false;
+    }
     if (this->name_.empty()) {
         this->name_ = FileUtil::GetFileNameWithoutExt(cfg_file_);
     }
 
-    // this->newbin_
+    if (vm_->count("kill")) {
+        kill_ = true;
+    }
+    if (vm_->count("reload")) {
+        reload_ = true;
+    }
+    if (vm_->count("status")) {
+        status_ = true;
+    }
+    if (vm_->count("newbin")) {
+        newbin_ = true;
+    }
+    if (vm_->count("foreground")) {
+        foreground_ = true;
+    }
+    if (vm_->count("debug")) {
+        debug_ = true;
+    }
+
+    if (tmp_log_dir[0] != '/') {
+        std::string d = FileUtil::RealPath(tmp_log_dir);
+        if (d.empty()) {
+            return false;
+        }
+        tmp_log_dir = d;
+    }
+    log_dir_ = tmp_log_dir + "/";
+    if (FLAGS_log_dir.empty()) {
+        FLAGS_log_dir = log_dir_; // TODO 
+    }
+
+    if (tmp_cfg[0] != '/') {
+        std::string d = FileUtil::RealPath(tmp_cfg);
+        if (d.empty()) {
+            return false;
+        }
+        tmp_cfg = d;
+    }
+    cfg_file_ = tmp_cfg;
+
+    if (tmp_pid[0] != '/') {
+        std::string d = FileUtil::RealPath(tmp_pid);
+        if (d.empty()) {
+            return false;
+        }
+        tmp_pid = d;
+    }
+    pid_file_ = tmp_pid;
+
+    if (tmp_mod[0] != '/') {
+        std::string d = FileUtil::RealPath(tmp_mod);
+        if (d.empty()) {
+            return false;
+        }
+        tmp_mod = d;
+    }
+    module_file_ = tmp_mod;
+
 
     if (!FileUtil::IsDir(log_dir_)) {
         umask(002);
@@ -105,15 +178,25 @@ bool Option::Init(int argc, char** argv) {
         return false;
     }
 
-    http_ports_ = FLAGS_http_port;
-    tcp_port_ = FLAGS_tcp_port;
-    udp_ports_ = FLAGS_udp_port;
-    tcp_thread_pool_size_ = FLAGS_tcp_thread_pool_size;
-    http_thread_pool_size_ = FLAGS_http_thread_pool_size;
+    if (!FileUtil::IsFileExist(module_file_) ||
+        !FileUtil::IsReadable(module_file_)) {
+        std::cerr << "Can't find or read module file " << module_file_ << std::endl;
+        return false;
+    }
+
+//     http_ports_ = FLAGS_http_port;
+//     tcp_port_ = FLAGS_tcp_port;
+//     udp_ports_ = FLAGS_udp_port;
+//     tcp_thread_pool_size_ = FLAGS_tcp_thread_pool_size;
+//     http_thread_pool_size_ = FLAGS_http_thread_pool_size;
 
     initialized_ = true;
 
     return true;
+}
+
+void Option::AddOption(const boost::program_options::options_description& op) {
+    cmdline_options_->add(op);
 }
 
 const std::string& Option::GetExeName() {

@@ -30,9 +30,6 @@
     <ClCompile Include="..\3rdparty\gtest\src\gtest-all.cc">
       <Filter>gtest</Filter>
     </ClCompile>
-    <ClCompile Include="..\test\glog_test.cc">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\test_common.h">

@@ -1,4 +1,4 @@
-
+#pragma once
 #include "mpic/exp.h"
 
 #include "nfmpic_resource.h"
@@ -22,8 +22,7 @@ public:
                            evpp::udp::MessagePtr& msg);
 
     void OnTCPMessage(const evpp::TCPConnPtr& conn,
-                   evpp::Buffer* msg,
-                   evpp::Timestamp ts);
+                   evpp::Buffer* msg);
 
     void OnTCPConnection(const evpp::TCPConnPtr& conn);
 };
