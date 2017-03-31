@@ -18,14 +18,16 @@ CFLAGS=$(TOP_CFLAGS) -g -c -fPIC $(DEBUG) \
 	   -I . -I $(MPIC_PATH) -I $(EVPP_PATH) -MMD
 CPPFLAGS= $(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11
 
-RTFLAGS := \
-    -Wl,-rpath=. \
-    -Wl,-rpath=$(MPIC_PATH)/mpic \
-    -Wl,-rpath=$(EVPP_PATH)/evpp \
+RTFLAGS = \
+         -Wl,-rpath=. \
+         -Wl,-rpath=$(MPIC_PATH)/mpic \
+         -Wl,-rpath=$(EVPP_PATH)/build-release/lib \
+         -Wl,-rpath=$(EVPP_PATH)/build-debug/lib \
 
-LDFLAGS= $(RTFLAGS) -lglog -lpthread -lmpic -levpp \
-		 -L$(MPIC_PATH)/mpic \
-		 -L$(EVPP_PATH)/evpp \
+LDFLAGS = $(RTFLAGS) -lglog -lpthread -lmpic -levpp \
+         -L$(MPIC_PATH)/mpic \
+         -L$(EVPP_PATH)/build-release/lib \
+         -L$(EVPP_PATH)/build-debug/lib \
 
 SRCS := $(wildcard *.cc) 
 OBJS := $(patsubst %, %.o, $(SRCS))

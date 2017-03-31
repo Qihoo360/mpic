@@ -25,7 +25,10 @@ H_LINK_LIB("Ws2_32")
 //      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll
 //
 // Run on Linux
-//      $ ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
+//      $ touch /tmp/mpic.conf && ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
+//
+//  on another console:
+//      $ curl http://127.0.0.1:8081/echo -d xxx
 //
 int main(int argc, char* argv[]) {
     std::shared_ptr<mpic::Option> op(new nfmpic::Option);

@@ -16,7 +16,7 @@ RTFLAGS := -Wl,-rpath=. \
 
 LDFLAGS= $(RTFLAGS) \
 		 -L$(MPIC_DIR)/mpic \
-		 -lmpic -lglog -lgflags 
+		 -lmpic -lglog -lboost_program_options-mt
 
 SRCS := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRCS))

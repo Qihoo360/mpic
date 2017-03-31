@@ -22,9 +22,10 @@ void sigterm(int c) {
 
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
-//      $  ./mpic-framework.exe --cfg=mpic.conf --mod=libechomod.dll
+//      $ ./mpic-framework.exe --cfg=mpic.conf --mod=libechomod.dll
 //
 // Run on Linux
+//      $ ./mpic-framework --mod=../modules/echo/libechomodule.so -f
 //
 int main(int argc, char* argv[]) {
     signal(SIGTERM, &sigterm);
