@@ -13,12 +13,12 @@
 *.la
 *.a
 
-msvc/bin/
-msvc/libmpic.VC.VC.opendb
-msvc/libmpic.VC.db
-msvc/Debug/
-msvc/UpgradeLog.htm
-msvc/.vs/
+vsprojects/bin/
+vsprojects/libmpic.VC.VC.opendb
+vsprojects/libmpic.VC.db
+vsprojects/Debug/
+vsprojects/UpgradeLog.htm
+vsprojects/.vs/
 
 libmpic.so.*
 

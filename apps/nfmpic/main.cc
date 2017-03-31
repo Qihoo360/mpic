@@ -20,12 +20,6 @@ H_LINK_LIB("Ws2_32")
 #pragma comment(lib,"libmpic.lib")
 #endif
 
-// DEFINE_string(http_port, "8080,8090", "The listening ports of the http server. We can give more than 1 port using comma to separate them.");
-// DEFINE_int32(tcp_port, 8081, "The listening port of the tcp server.");
-// DEFINE_string(udp_port, "5353", "The listening ports of the udp server. We can give more than 1 port using comma to separate them.");
-// DEFINE_int32(tcp_thread_pool_size, 12, "The thread number in the tcp server's working thread pool");
-// DEFINE_int32(http_thread_pool_size, 12, "The thread number in the http server's working thread pool");
-
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
 //      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll

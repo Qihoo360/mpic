@@ -19,11 +19,7 @@
 namespace mpic {
 
 Option::Option()
-    : 
-//     tcp_port_(0)
-//     , tcp_thread_pool_size_(1)
-//     , http_thread_pool_size_(1)
-    initialized_(false)
+    : initialized_(false)
     , kill_(false)
     , reload_(false)
     , status_(false)
@@ -126,7 +122,7 @@ bool Option::Init(int argc, char** argv) {
     }
     log_dir_ = tmp_log_dir + "/";
     if (FLAGS_log_dir.empty()) {
-        FLAGS_log_dir = log_dir_; // TODO 
+        FLAGS_log_dir = log_dir_; // TODO check it is right.
     }
 
     if (tmp_cfg[0] != '/') {
@@ -183,12 +179,6 @@ bool Option::Init(int argc, char** argv) {
         std::cerr << "Can't find or read module file " << module_file_ << std::endl;
         return false;
     }
-
-//     http_ports_ = FLAGS_http_port;
-//     tcp_port_ = FLAGS_tcp_port;
-//     udp_ports_ = FLAGS_udp_port;
-//     tcp_thread_pool_size_ = FLAGS_tcp_thread_pool_size;
-//     http_thread_pool_size_ = FLAGS_http_thread_pool_size;
 
     initialized_ = true;
 

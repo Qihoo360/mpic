@@ -6,10 +6,8 @@ namespace nfmpic {
 
 class Option : public mpic::Option {
 public:
-    bool Init(mpic::Option* op) {
-        bool rc = true;
-
-        mpic::po::options_description opts("http options");
+    bool Init(int argc, char** argv) {
+        mpic::po::options_description opts("network service options");
         opts.add_options()
             ("tcp-thread-pool-size",
              mpic::po::value<int>(&tcp_thread_pool_size_)->default_value(tcp_thread_pool_size_),
@@ -26,9 +24,9 @@ public:
             ("udp-port",
              mpic::po::value<std::string>(&udp_ports_)->default_value(udp_ports_),
              "the udp port");
-        op->AddOption(opts);
+        AddOption(opts);
 
-        return true;
+        return mpic::Option::Init(argc, argv);
     }
 
     const std::string& http_ports() const {
