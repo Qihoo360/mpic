@@ -38,3 +38,5 @@ apps/nfmpic/nfmpic
 3rdparty/glog-0.3.4/vsprojects/libglog_static/libglog_static_libmpic.vcxproj.user
 
 test/mpic-test
+
+tools/initialized.txt
