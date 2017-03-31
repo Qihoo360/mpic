@@ -34,9 +34,12 @@ apps/nfmpic/nfmpic
 3rdparty/gflags-2.2.0/gflags_nothreads_shared.dir/
 3rdparty/gflags-2.2.0/gflags_shared.dir/
 3rdparty/gflags-2.2.0.bak/
-3rdparty/glog-0.3.4/vsprojects/libglog/Debug/
-3rdparty/glog-0.3.4/vsprojects/libglog_static/libglog_static_libmpic.vcxproj.user
+3rdparty/glog-0.3.4
+3rdparty/libdaemon-0.14
 
 test/mpic-test
 
 tools/initialized.txt
+
+build
+
