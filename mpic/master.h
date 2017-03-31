@@ -6,9 +6,6 @@
 #include <memory>
 #include <map>
 
-#include "platform_config.h"
-#include "internal/inner_pre.h"
-
 #include "option.h"
 
 namespace mpic {

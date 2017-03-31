@@ -5,10 +5,11 @@
 
 #include <libdaemon/daemon.h>
 
-#include "./master.h"
-#include "./module.h"
-#include "./title.h"
-#include "./internal/file_util.h"
+#include "master.h"
+#include "module.h"
+#include "title.h"
+#include "internal/inner_pre.h"
+#include "internal/file_util.h"
 
 namespace mpic {
 

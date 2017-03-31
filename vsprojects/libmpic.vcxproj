@@ -27,6 +27,7 @@
     <ClInclude Include="..\mpic\internal\dynlib.h" />
     <ClInclude Include="..\mpic\internal\file_util.h" />
     <ClInclude Include="..\mpic\internal\inner_pre.h" />
+    <ClInclude Include="..\mpic\logging.h" />
     <ClInclude Include="..\mpic\master.h" />
     <ClInclude Include="..\mpic\module.h" />
     <ClInclude Include="..\mpic\option.h" />

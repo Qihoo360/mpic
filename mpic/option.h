@@ -2,7 +2,9 @@
 
 #include <string>
 
-#include "internal/inner_pre.h"
+#include "platform_config.h"
+#include "mpic_export.h"
+#include "logging.h"
 
 
 namespace boost {

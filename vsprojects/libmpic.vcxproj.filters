@@ -31,11 +31,11 @@
     <ClCompile Include="..\mpic\internal\file_util.cc">
       <Filter>misc</Filter>
     </ClCompile>
-    <ClCompile Include="..\mpic\internal\inner_pre.cc">
-      <Filter>misc</Filter>
-    </ClCompile>
     <ClCompile Include="..\mpic\title.cc">
       <Filter>multiproc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mpic\internal\inner_pre.cc">
+      <Filter>misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,11 +63,14 @@
     <ClInclude Include="..\mpic\internal\file_util.h">
       <Filter>misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\mpic\internal\inner_pre.h">
-      <Filter>misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\mpic\title.h">
       <Filter>multiproc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\logging.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mpic\internal\inner_pre.h">
+      <Filter>misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
