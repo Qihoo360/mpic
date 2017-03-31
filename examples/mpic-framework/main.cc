@@ -21,7 +21,7 @@ void sigterm(int c) {
 }
 
 // Run on Windowns:
-//      $ cd msvc/bin/Debug
+//      $ cd vsprojects/bin/Debug
 //      $  ./mpic-framework.exe --cfg=mpic.conf --mod=libechomod.dll
 //
 // Run on Linux

@@ -11,13 +11,13 @@
 
 And then copy gflags.dll and gflags.lib to mpic
 
-    $ cp bin/Debug/gflags.* lib/Debug/gflags.* ../../msvc/bin/Debug/
-    $ cp bin/Release/gflags.* lib/Release/gflags.* ../../msvc/bin/Release/
+    $ cp bin/Debug/gflags.* lib/Debug/gflags.* ../../vsprojects/bin/Debug/
+    $ cp bin/Release/gflags.* lib/Release/gflags.* ../../vsprojects/bin/Release/
 
 ## Add evpp
 
     $ cd ../../
     $ pwd
     /the/root/path/of/mpic
-    $ cp ../evpp/msvc/bin/Debug/*.* msvc/bin/Debug
-    $ cp ../evpp/msvc/bin/Release/*.* msvc/bin/Release
+    $ cp ../evpp/vsprojects/bin/Debug/*.* vsprojects/bin/Debug
+    $ cp ../evpp/vsprojects/bin/Release/*.* vsprojects/bin/Release

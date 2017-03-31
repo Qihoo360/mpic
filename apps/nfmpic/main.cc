@@ -27,7 +27,7 @@ H_LINK_LIB("Ws2_32")
 // DEFINE_int32(http_thread_pool_size, 12, "The thread number in the http server's working thread pool");
 
 // Run on Windowns:
-//      $ cd msvc/bin/Debug
+//      $ cd vsprojects/bin/Debug
 //      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll
 //
 // Run on Linux
