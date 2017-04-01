@@ -17,7 +17,7 @@ fi
 # libdaemon
 cd $THIRTPARTYDIR
 pwd
-wget "http://0pointer.de/lennart/projects/libdaemon/libdaemon-0.14.tar.gz"
+curl "http://0pointer.de/lennart/projects/libdaemon/libdaemon-0.14.tar.gz" -o libdaemon-0.14.tar.gz
 tar zxvf libdaemon-0.14.tar.gz
 rm -f libdaemon-0.14.tar.gz
 cd $TOOLSDIR
@@ -28,5 +28,17 @@ git clone -b v0.3.4  --depth 1  https://github.com/google/glog.git
 mv glog $THIRTPARTYDIR/glog-0.3.4
 
 
+######################################################
+# evpp
+git clone -b v0.3.1  --depth 1  https://github.com/Qihoo360/evpp.git
+mv evpp $THIRTPARTYDIR/evpp
+
+
+
+######################################################
+# End
 echo -n "Initialized time : " > initialized.txt
 echo `date` >> initialized.txt
+
+
+

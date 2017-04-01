@@ -36,6 +36,7 @@ apps/nfmpic/nfmpic
 3rdparty/gflags-2.2.0.bak/
 3rdparty/glog-0.3.4
 3rdparty/libdaemon-0.14
+3rdparty/evpp
 
 test/mpic-test
 

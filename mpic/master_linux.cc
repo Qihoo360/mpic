@@ -1,3 +1,8 @@
+
+#include "master.h"
+#include "module.h"
+
+#ifndef _WIN32
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <assert.h>
@@ -5,8 +10,6 @@
 
 #include <libdaemon/daemon.h>
 
-#include "master.h"
-#include "module.h"
 #include "title.h"
 #include "internal/inner_pre.h"
 #include "internal/file_util.h"
@@ -343,3 +346,4 @@ int Master::Run() {
 }
 
 }
+#endif // _WIN32

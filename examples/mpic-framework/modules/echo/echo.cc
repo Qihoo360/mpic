@@ -13,7 +13,7 @@ bool EchoModule::InitInMaster(const mpic::Option* op) {
 int EchoModule::Run() {
     LOG(WARNING) << __FUNCTION__ << " running ...";
     for (;;) {
-        LOG(WARNING) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
+        LOG(ERROR) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
         google::FlushLogFiles(0);
         sleep(1);
     }

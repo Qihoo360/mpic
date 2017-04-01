@@ -14,9 +14,6 @@
 #include <mpic/title.h>
 #include <mpic/option.h>
 
-#ifdef H_OS_WINDOWS
-#pragma comment(lib,"libmpic.lib")
-#endif
 
 namespace nfmpic {
 

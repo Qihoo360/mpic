@@ -1,5 +1,6 @@
 
-file(GLOB mpic_SRCS *.cc */*.cc *.h */*.h ${PROJECT_SOURCE_DIR}/3rdparty/libdaemon-0.14/libdaemon/*.c)
+file(GLOB mpic_SRCS *.cc */*.cc *.h */*.h)
+file(GLOB libdaemon_SRCS ${PROJECT_SOURCE_DIR}/3rdparty/libdaemon-0.14/libdaemon/*.c)
 file(GLOB mpic_PUBLIC_HEADERS *.h)
 
 message(STATUS "mpic_SRCS : " ${mpic_SRCS})
@@ -12,9 +13,10 @@ add_definitions(-D'LOCALSTATEDIR="./"')
 add_library(mpic_static STATIC ${mpic_SRCS})
 
 if (UNIX)
+    list(APPEND mpic_SRCS ${libdaemon_SRCS})
     add_library(mpic SHARED ${mpic_SRCS})
-    target_link_libraries(mpic        glog boost_program_options-mt dl)
-    target_link_libraries(mpic_static glog boost_program_options-mt dl)
+    target_link_libraries(mpic        glog dl ${Boost_LIBRARIES})
+    target_link_libraries(mpic_static glog dl ${Boost_LIBRARIES})
 
     set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
     include (utils)

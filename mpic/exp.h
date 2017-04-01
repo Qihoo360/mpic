@@ -5,7 +5,7 @@
 #include "mpic/option.h"
 
 #ifdef H_OS_WINDOWS
-#pragma comment(lib,"libglog_static.lib")
-H_LINK_LIB("libmpic")
-H_LINK_LIB("Ws2_32")
+#pragma comment(lib, "glog.lib")
+#pragma comment(lib, "mpic_static.lib")
+#pragma comment(lib, "Ws2_32.lib")
 #endif

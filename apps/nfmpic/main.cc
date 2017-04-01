@@ -11,14 +11,14 @@
 
 #include "main-inl.h"
 
-#ifdef H_OS_WINDOWS
-H_LINK_LIB("libglog_static")
-H_LINK_LIB("Ws2_32")
-#endif
-
-#ifdef H_OS_WINDOWS
-#pragma comment(lib,"libmpic.lib")
-#endif
+// #ifdef H_OS_WINDOWS
+// H_LINK_LIB("libglog_static")
+// H_LINK_LIB("Ws2_32")
+// #endif
+// 
+// #ifdef H_OS_WINDOWS
+// #pragma comment(lib,"libmpic.lib")
+// #endif
 
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug

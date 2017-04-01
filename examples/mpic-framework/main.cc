@@ -8,11 +8,6 @@
 #include "mpic/master.h"
 #include "mpic/title.h"
 
-#ifdef H_OS_WINDOWS
-#pragma comment(lib,"libglog_static.lib")
-#endif
-
-
 void sigterm(int c) {
     std::string title_prefix = mpic::Option::GetExeName() + "(" + mpic::Master::instance().option()->name() + "): worker process is shutting down ...";
     mpic::Title::Set(title_prefix);
