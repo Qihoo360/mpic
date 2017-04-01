@@ -4,9 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "mpic/exp.h"
 #include "mpic/master.h"
-
 #include "option.h"
 
 #include "main-inl.h"
@@ -23,10 +21,12 @@
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
 //      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll
+//      $ cd build
+//      $ touch /tmp/nfmpic.conf && ./bin/Debug/nfmpic.exe --cfg=/tmp/nfmpic.conf --mod=./lib/Debug/nfmpic_module_echo.dll
 //
 // Run on Linux
-//      $ touch /tmp/mpic.conf && ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
-//      $ touch /tmp/mpic.conf && ../build/bin/nfmpic   --mod=/home/weizili/git/mpic/build/lib/libnfmpic_module_echo.so -f 
+//      $ touch /tmp/nfmpic.conf && ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
+//      $ touch /tmp/nfmpic.conf && ../build/bin/nfmpic --mod=/home/weizili/git/mpic/build/lib/libnfmpic_module_echo.so -f 
 //
 //  on another console:
 //      $ curl -s http://127.0.0.1:8081/echo -d xxx

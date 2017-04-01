@@ -32,7 +32,6 @@
     <ClInclude Include="..\mpic\module.h" />
     <ClInclude Include="..\mpic\option.h" />
     <ClInclude Include="..\mpic\mpic_export.h" />
-    <ClInclude Include="..\mpic\exp.h" />
     <ClInclude Include="..\mpic\platform_config.h" />
     <ClInclude Include="..\mpic\title.h" />
   </ItemGroup>

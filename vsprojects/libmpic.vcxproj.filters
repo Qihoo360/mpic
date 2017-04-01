@@ -39,9 +39,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\mpic\exp.h">
-      <Filter>common</Filter>
-    </ClInclude>
     <ClInclude Include="..\mpic\mpic_export.h">
       <Filter>common</Filter>
     </ClInclude>

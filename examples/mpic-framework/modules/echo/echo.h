@@ -1,5 +1,5 @@
 
-#include "mpic/exp.h"
+#include "mpic/module.h"
 
 namespace echo {
 class EchoResource : public mpic::Resource {

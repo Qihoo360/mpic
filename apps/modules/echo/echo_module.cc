@@ -5,14 +5,20 @@
 #include <evpp/tcp_conn.h>
 #include <evpp/udp/udp_server.h>
 
-#include "echo_module.h"
-
 #include <atomic>
 
-#include <mpic/exp.h>
+#include "echo_module.h"
+
 #include <mpic/master.h>
 #include <mpic/title.h>
 #include <mpic/option.h>
+
+
+#ifdef H_OS_WINDOWS
+#pragma comment(lib, "glog.lib")
+#pragma comment(lib, "mpic_static.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#endif
 
 
 namespace nfmpic {

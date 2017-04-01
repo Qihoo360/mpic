@@ -4,9 +4,15 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "mpic/exp.h"
 #include "mpic/master.h"
 #include "mpic/title.h"
+
+#ifdef H_OS_WINDOWS
+#pragma comment(lib, "glog.lib")
+#pragma comment(lib, "mpic_static.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#endif
+
 
 void sigterm(int c) {
     std::string title_prefix = mpic::Option::GetExeName() + "(" + mpic::Master::instance().option()->name() + "): worker process is shutting down ...";
@@ -18,6 +24,8 @@ void sigterm(int c) {
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
 //      $ ./mpic-framework.exe --cfg=mpic.conf --mod=libechomod.dll
+//      $ cd build
+//      $ touch /tmp/nfmpic.conf && ./bin/Debug/examples_mpic_framework.exe --cfg=/tmp/nfmpic.conf --mod=./lib/Debug/examples_module_echo.dll
 //
 // Run on Linux
 //      $ ./mpic-framework --mod=../modules/echo/libechomodule.so -f
