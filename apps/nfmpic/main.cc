@@ -29,7 +29,7 @@
 //      $ touch /tmp/mpic.conf && ../build/bin/nfmpic   --mod=/home/weizili/git/mpic/build/lib/libnfmpic_module_echo.so -f 
 //
 //  on another console:
-//      $ curl http://127.0.0.1:8081/echo -d xxx
+//      $ curl -s http://127.0.0.1:8081/echo -d xxx
 //
 int main(int argc, char* argv[]) {
     std::shared_ptr<mpic::Option> op(new nfmpic::Option);

@@ -11,13 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\examples\modules\echo\echo.cc">
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreprocessToFile>
-    </ClCompile>
+    <ClCompile Include="..\examples\mpic-framework\modules\echo\echo.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\examples\modules\echo\echo.h" />
+    <ClInclude Include="..\examples\mpic-framework\modules\echo\echo.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7AB9B703-2311-412F-8B43-2571DC89E1BF}</ProjectGuid>
