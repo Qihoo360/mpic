@@ -43,4 +43,4 @@ test/mpic-test
 tools/initialized.txt
 
 build
-
+build-release

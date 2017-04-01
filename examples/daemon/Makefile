@@ -4,7 +4,7 @@ CXX := g++
 
 CURRENT_DIR=$(shell echo `pwd`)
 MPIC_DIR=$(CURRENT_DIR)/../..
-LIBDAEMON_PATH := $(MPIC_DIR)/3rdparty/libdaemon
+LIBDAEMON_PATH := $(MPIC_DIR)/3rdparty/libdaemon-0.14
 
 CFLAGS=-g -c -fPIC -D_DEBUG \
 	   -Wall -Wno-unused-parameter -Wno-unused-function -Wunused-variable -Wunused-value \
