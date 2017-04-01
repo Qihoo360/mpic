@@ -10,10 +10,10 @@ set (MACOSX_RPATH ${LIBRARY_OUTPUT_PATH})
 include_directories(${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/3rdparty/libdaemon-0.14)
 add_definitions(-D'LOCALSTATEDIR="./"')
 
-add_library(mpic_static STATIC ${mpic_SRCS})
-
 if (UNIX)
     list(APPEND mpic_SRCS ${libdaemon_SRCS})
+    message(STATUS "mpic_SRCS : " ${mpic_SRCS})
+    add_library(mpic_static STATIC ${mpic_SRCS})
     add_library(mpic SHARED ${mpic_SRCS})
     target_link_libraries(mpic        glog dl ${Boost_LIBRARIES})
     target_link_libraries(mpic_static glog dl ${Boost_LIBRARIES})
@@ -37,7 +37,8 @@ if (UNIX)
     install (FILES ${mpic_PUBLIC_HEADERS} DESTINATION "include/mpic")
 
 else (UNIX)
+    add_library(mpic_static STATIC ${mpic_SRCS})
 	link_directories(${PROJECT_SOURCE_DIR}/vsprojects/bin/${CMAKE_BUILD_TYPE})
-    target_link_libraries(mpic_static libglog_static)
+    target_link_libraries(mpic_static glog)
 endif (UNIX)
 

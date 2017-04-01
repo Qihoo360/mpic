@@ -7,7 +7,7 @@ AR=ar
 ARFLAGS=cru
 
 PWD := $(shell pwd)
-LIBDAEMON_PATH := ../3rdparty/libdaemon
+LIBDAEMON_PATH := ../3rdparty/libdaemon-0.14
 
 DEBUG := -D_DEBUG
 

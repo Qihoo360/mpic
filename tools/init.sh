@@ -34,7 +34,6 @@ git clone -b v0.3.1  --depth 1  https://github.com/Qihoo360/evpp.git
 mv evpp $THIRTPARTYDIR/evpp
 
 
-
 ######################################################
 # End
 echo -n "Initialized time : " > initialized.txt

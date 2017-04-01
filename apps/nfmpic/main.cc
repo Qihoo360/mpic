@@ -26,6 +26,7 @@
 //
 // Run on Linux
 //      $ touch /tmp/mpic.conf && ./nfmpic --mod=/home/weizili/git/mpic/apps/modules/echo/libechomodule.so -f
+//      $ touch /tmp/mpic.conf && ../build/bin/nfmpic   --mod=/home/weizili/git/mpic/build/lib/libnfmpic_module_echo.so -f 
 //
 //  on another console:
 //      $ curl http://127.0.0.1:8081/echo -d xxx
