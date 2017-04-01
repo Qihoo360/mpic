@@ -13,8 +13,8 @@ add_library(mpic_static STATIC ${mpic_SRCS})
 
 if (UNIX)
     add_library(mpic SHARED ${mpic_SRCS})
-    target_link_libraries(mpic        glog boost_program_options-mt)
-    target_link_libraries(mpic_static glog boost_program_options-mt)
+    target_link_libraries(mpic        glog boost_program_options-mt dl)
+    target_link_libraries(mpic_static glog boost_program_options-mt dl)
 
     set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
     include (utils)

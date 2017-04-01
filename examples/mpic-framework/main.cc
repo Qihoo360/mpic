@@ -26,6 +26,7 @@ void sigterm(int c) {
 //
 // Run on Linux
 //      $ ./mpic-framework --mod=../modules/echo/libechomodule.so -f
+//      $ ./bin/examples_mpic_framework --cfg=/tmp/mpic.conf --mod=/home/weizili/git/mpic/build/lib/libexamples_module_echo.so -f
 //
 int main(int argc, char* argv[]) {
     signal(SIGTERM, &sigterm);
