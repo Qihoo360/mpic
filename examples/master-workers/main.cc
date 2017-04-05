@@ -9,6 +9,10 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 
+namespace gflags {
+using namespace google; // A workaround to fix gflags-2.x namespace change from 'google' to 'gflags'
+}
+
 #include "master.h"
 #include "title.h"
 
