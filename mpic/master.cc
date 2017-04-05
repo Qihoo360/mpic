@@ -136,6 +136,7 @@ void Master::UnloadModule() {
         module_->Uninit();
         module_.reset();
     }
+
     resource_.reset();
 
     if (dlmodule_) {

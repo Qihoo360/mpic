@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <libdaemon/daemon.h>
 
@@ -22,9 +23,9 @@ static const char* PidFileName() {
 
 static void sigchld(int) {}
 
-void Master::KillAllChildren(const ProcessMap& m) {
+void Master::KillChildren(const ProcessMap& m) {
     for (auto& e : m) {
-        LOG(INFO) << "killing child(" << e.first << ")";
+        LOG(WARNING) << "killing child(" << e.first << ")";
         kill(e.first, SIGTERM);
         exiting_processes_[e.first] = e.second;
     }
@@ -131,7 +132,7 @@ int Master::RunMaster(const Option& op) {
             HandleSIGHUB(op, &sigset);
         } else if (sig.si_signo == SIGTERM) {
             LOG(INFO) << "term signal recved. signo=" << sig.si_signo;
-            KillAllChildren(running_processes_);
+            KillChildren(running_processes_);
             running_processes_.clear();
             exiting = true;
         } else {
@@ -159,8 +160,9 @@ void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
     ProcessMap m;
     m.swap(running_processes_);
     SpawnChildWorkers(op, sigset);
+    sleep(3); // sleep some time to wait the new children process started.
     // TODO FIX : wait all children process has all initialized.
-    KillAllChildren(m);
+    KillChildren(m);
 }
 
 void Master::HandleSIGCHLD(const mpic::Option& op, sigset_t* sigset) {

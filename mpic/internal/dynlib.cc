@@ -17,7 +17,7 @@ bool DynLib::IsLoaded() {
 
 bool DynLib::Load() {
     std::string name = dll_path_;
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
     handler_ = (Handler)::LoadLibraryA(name.c_str());
 #else
     handler_ = (Handler)::dlopen(name.c_str(), RTLD_LAZY | RTLD_LOCAL);
@@ -45,7 +45,7 @@ bool DynLib::Unload() {
         return false;
     }
 
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
     // If the function FreeLibrary() succeeds, the return value is nonzero.
     if (::FreeLibrary(handler_)) {
         handler_ = NULL;
@@ -70,7 +70,7 @@ bool DynLib::Unload() {
 void* DynLib::GetSymbol(const std::string& name) {
     void* rp = NULL;
 
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
     rp = (void*)::GetProcAddress(handler_, name.c_str());
 #else
     rp = (void*)::dlsym(handler_, name.c_str());
@@ -89,7 +89,7 @@ void* DynLib::GetSymbol(const std::string& name) {
 }
 
 std::string DynLib::GetError() {
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
     LPVOID lpMsgBuf;
     FormatMessage(
         FORMAT_MESSAGE_ALLOCATE_BUFFER |

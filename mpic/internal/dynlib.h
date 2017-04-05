@@ -8,7 +8,7 @@ namespace mpic {
 // @remark You should keep the object alive before unload the loaded library.
 class DynLib {
 public:
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
     typedef HMODULE Handler;
 #else
     typedef void* Handler;

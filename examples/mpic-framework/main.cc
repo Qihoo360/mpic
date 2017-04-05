@@ -7,7 +7,7 @@
 #include "mpic/master.h"
 #include "mpic/title.h"
 
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
 #pragma comment(lib, "glog.lib")
 #pragma comment(lib, "mpic_static.lib")
 #pragma comment(lib, "Ws2_32.lib")

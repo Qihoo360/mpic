@@ -1,18 +1,18 @@
 
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
 #pragma comment(lib, "glog.lib")
 #pragma comment(lib, "mpic_static.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #endif
 
-#ifndef H_OS_WINDOWS
+#ifndef _WIN32
 #include <signal.h>
 #endif
 
 namespace {
     struct OnStartup {
         OnStartup() {
-#ifdef H_OS_WINDOWS
+#ifdef _WIN32
             // Initialize net work.
             WSADATA wsaData;
             // Initialize Winsock 2.2

@@ -62,8 +62,6 @@ private:
     bool InitModule();
     bool InitResource();
 
-    void UninitModule();
-    void UninitResource();
     void UnloadModule();
 
 
@@ -92,7 +90,7 @@ private:
 
     void HandleSIGHUB(const mpic::Option& option, sigset_t* sigset);
     void HandleSIGCHLD(const mpic::Option& option, sigset_t* sigset);
-    void KillAllChildren(const ProcessMap& m);
+    void KillChildren(const ProcessMap& m);
 #endif
 
 private:

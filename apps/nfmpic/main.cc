@@ -9,12 +9,12 @@
 
 #include "main-inl.h"
 
-// #ifdef H_OS_WINDOWS
+// #ifdef _WIN32
 // H_LINK_LIB("libglog_static")
 // H_LINK_LIB("Ws2_32")
 // #endif
 // 
-// #ifdef H_OS_WINDOWS
+// #ifdef _WIN32
 // #pragma comment(lib,"libmpic.lib")
 // #endif
 
