@@ -24,7 +24,19 @@ public:
     virtual ~Option();
     virtual bool Init(int argc, char** argv);
 
-    bool kill()   const {
+public:
+    void AddOption(const po::options_description& op);
+
+    const po::variables_map* vm() const {
+        return vm_.get();
+    }
+
+    const po::options_description* cmdline_options() const {
+        return cmdline_options_.get();
+    }
+
+public:
+    bool kill() const {
         return kill_;
     }
     bool reload() const {
@@ -42,10 +54,10 @@ public:
     bool foreground() const {
         return foreground_;
     }
-    const std::string& name()     const {
+    const std::string& name() const {
         return name_;
     }
-    const std::string& log_dir()  const {
+    const std::string& log_dir() const {
         return log_dir_;
     }
     const std::string& pid_file() const {
@@ -60,22 +72,13 @@ public:
     const std::string& original_cmdline() const {
         return original_cmdline_;
     }
-
     int worker_processes() const {
         return worker_processes_;
     }
 
-    static const std::string& GetExeName();
-
 public:
 
-    const po::variables_map*
-        vm() const { return vm_.get(); }
-
-    const po::options_description*
-        cmdline_options() const { return cmdline_options_.get(); }
-
-    void AddOption(const po::options_description& op);
+    static const std::string& GetExeName();
 
 private:
     std::shared_ptr<po::variables_map> vm_;

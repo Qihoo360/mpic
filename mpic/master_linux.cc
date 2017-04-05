@@ -161,7 +161,7 @@ void Master::HandleSIGHUB(const mpic::Option& op, sigset_t* sigset) {
     m.swap(running_processes_);
     SpawnChildWorkers(op, sigset);
     sleep(3); // sleep some time to wait the new children process started.
-    // TODO FIX : wait all children process has all initialized.
+    // TODO FIXME : wait all children process has all initialized.
     KillChildren(m);
 }
 
@@ -225,7 +225,7 @@ int Master::RunAsDaemon(const Option& op) {
         // in parent
         int retval = 0;
         if ((retval = daemon_retval_wait(10)) < 0) {
-            daemon_log(LOG_ERR, "can't retrive daemon retval: %s",
+            daemon_log(LOG_ERR, "can't retrieve daemon retval: %s",
                        strerror(errno));
             return 1;
         }
