@@ -23,12 +23,11 @@ void sigterm(int c) {
 
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
-//      $ ./mpic-framework.exe --cfg=mpic.conf --mod=libechomod.dll
+//      $ ./examples_mpic_framework.exe --cfg=mpic.conf --mod=examples_module_echo.dll
 //      $ cd build
 //      $ touch /tmp/nfmpic.conf && ./bin/Debug/examples_mpic_framework.exe --cfg=/tmp/nfmpic.conf --mod=./lib/Debug/examples_module_echo.dll
 //
 // Run on Linux
-//      $ ./mpic-framework --mod=../modules/echo/libechomodule.so -f
 //      $ ./bin/examples_mpic_framework --cfg=/tmp/mpic.conf --mod=/home/weizili/git/mpic/build/lib/libexamples_module_echo.so -f
 //
 int main(int argc, char* argv[]) {

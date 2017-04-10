@@ -20,7 +20,7 @@
 
 // Run on Windowns:
 //      $ cd vsprojects/bin/Debug
-//      $ ./nfmpic.exe --cfg=mpic.conf --mod=libnfmpic-module-echo.dll
+//      $ ./nfmpic.exe --cfg=mpic.conf --mod=nfmpic_module_echo.dll
 //      $ cd build
 //      $ touch /tmp/nfmpic.conf && ./bin/Debug/nfmpic.exe --cfg=/tmp/nfmpic.conf --mod=./lib/Debug/nfmpic_module_echo.dll
 //
