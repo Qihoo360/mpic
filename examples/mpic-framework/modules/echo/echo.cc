@@ -18,7 +18,7 @@ bool EchoModule::InitInMaster(const mpic::Option* op) {
 int EchoModule::Run() {
     LOG(WARNING) << __FUNCTION__ << " running ...";
     for (;;) {
-        LOG(ERROR) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
+        LOG(WARNING) << __FUNCTION__ << " EchoModule pid=" << getpid() << " running ...";
         google::FlushLogFiles(0);
         sleep(1);
     }
@@ -28,4 +28,4 @@ int EchoModule::Run() {
 
 }
 
-EXPORT_MPIC_MODULE(echo::EchoModule, echo::EchoResource);
+EXPORT_MPIC_MODULE(echo::EchoModule, mpic::Resource);

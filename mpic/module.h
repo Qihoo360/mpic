@@ -11,7 +11,10 @@ class Option;
 class Resource {
 public:
     // This will be called in master process
-    virtual bool Init(const Option* op) = 0;
+    virtual bool Init(const Option* op) {
+        return true;
+    }
+
     virtual ~Resource() {}
 };
 

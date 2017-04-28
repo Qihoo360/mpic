@@ -15,12 +15,13 @@ namespace http { class Server; }
 
 // Network framework of multi-process in C++
 namespace nfmpic {
+
+// The resource object is created in master process
+// and it will not be changed when this mpic framework reloads
 class Resource : public mpic::Resource {
 public:
     Resource();
 
-    // The resource object is created in master process
-    // and it will not be changed when this mpic framework reloads
     virtual bool Init(const mpic::Option* op);
     virtual ~Resource() {}
 
