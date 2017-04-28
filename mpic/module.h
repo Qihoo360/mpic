@@ -6,18 +6,20 @@ namespace mpic {
 
 class Option;
 
+// The resource object is created in master process
+// and it will not be changed when this mpic framework reloads
 class Resource {
 public:
-    // The resource object is created in master process
-    // and it will not be changed when this mpic framework reloads
+    // This will be called in master process
     virtual bool Init(const Option* op) = 0;
     virtual ~Resource() {}
 };
 
+// This will be called in master process
+// It will be reloaded immediately when this mpic framework reloads
 class Module {
 public:
     // This will be called in master process
-    // It will be reloaded immediately when this mpic framework reloads
     virtual bool InitInMaster(const Option* op) = 0;
 
     // This will be called in worker process
