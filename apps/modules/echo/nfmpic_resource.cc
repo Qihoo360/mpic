@@ -33,7 +33,7 @@ bool Resource::Init(const mpic::Option* mpic_op) {
 
     if (op->tcp_port() > 0) {
         std::string addr = std::string("0.0.0.0:") + std::to_string(op->tcp_port());
-        auto p = new evpp::TCPServer(base_loop_->event_loop(),
+        auto p = new evpp::TCPServer(base_loop_->loop(),
                                      addr,
                                      "nfmpic-tcp",
                                      op->tcp_thread_pool_size());
@@ -61,7 +61,7 @@ bool Resource::Init(const mpic::Option* mpic_op) {
 }
 
 void Resource::AfterFork() {
-    base_loop()->event_loop()->AfterFork();
+    base_loop()->loop()->AfterFork();
     http_server()->AfterFork();
 }
 
@@ -112,7 +112,7 @@ void Resource::StopServers() {
     }
 
     if (http_server_) {
-        http_server_->Stop(false);
+        http_server_->Stop();
     }
 
     if (base_loop_) {
