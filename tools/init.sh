@@ -30,7 +30,10 @@ mv glog $THIRTPARTYDIR/glog-0.3.4
 
 ######################################################
 # evpp
-git clone -b v0.3.1  --depth 1  https://github.com/Qihoo360/evpp.git
+git clone -b master  --depth 1  https://github.com/Qihoo360/evpp.git
+cd evpp
+git checkout v0.6.1
+cd -
 mv evpp $THIRTPARTYDIR/evpp
 
 
