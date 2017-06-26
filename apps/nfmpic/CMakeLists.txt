@@ -8,4 +8,7 @@ endif (UNIX)
 
 add_executable(nfmpic ${SOURCES})
 target_link_libraries(nfmpic ${LIBRARIES})
+install (
+    TARGETS nfmpic
+    DESTINATION "bin/")
 
