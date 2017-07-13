@@ -62,6 +62,8 @@ bool Resource::Init(const mpic::Option* mpic_op) {
 void Resource::AfterFork() {
     base_loop()->loop()->AfterFork();
     http_server()->AfterFork();
+    tcp_server()->AfterFork();
+    udp_server()->AfterFork();
 }
 
 void Resource::RunServers() {
