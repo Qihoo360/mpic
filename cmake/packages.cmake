@@ -52,5 +52,7 @@ set (CPACK_OUTPUT_FILE_PREFIX   packages)
 
 set (CPACK_GENERATOR "RPM;TGZ;DEB")
 set (CPACK_PACKAGING_INSTALL_PREFIX "/home/s/safe")
+set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST "/home/s" "/home/s/include" "/home/s/lib" "/home/s/safe"
+                                          "/home/s/safe/bin" "/home/s/safe/lib" "/home/s/safe/include")
 
 
